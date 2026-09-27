@@ -1,14 +1,14 @@
 import Link from "next/link";
-import { Asterisk, BriefcaseBusiness, UserRound, Layers3, ArrowUpRight } from "lucide-react";
+import { Asterisk, House, BriefcaseBusiness, UserRound, Layers3, ArrowUpRight } from "lucide-react";
 import { portfolio, type Locale } from "@/data/portfolio";
 import { homePath, projectPath } from "@/lib/routes";
 import { MobileMenu } from "./mobile-menu";
 
-const navigationIcons = [BriefcaseBusiness, UserRound, Layers3, ArrowUpRight];
+const navigationIcons = [House, BriefcaseBusiness, UserRound, Layers3, ArrowUpRight];
 
 export function SiteHeader({ locale, slug }: { locale: Locale; slug?: string }) {
   const links = portfolio.nav.map(({ id, label }) => ({
-    href: `${homePath(locale)}#${id}`,
+    href: `${slug ? homePath(locale) : ""}#${id}`,
     label: label[locale],
   }));
   return (

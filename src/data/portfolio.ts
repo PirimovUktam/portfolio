@@ -221,6 +221,7 @@ export const portfolio: Portfolio = {
     scrollHint: { en: "Scroll to explore", uz: "Pastga aylantiring" },
   },
   nav: [
+    { id: "top", label: { en: "Home", uz: "Bosh sahifa" } },
     { id: "work", label: { en: "Work", uz: "Loyihalar" } },
     { id: "about", label: { en: "About", uz: "Men haqimda" } },
     { id: "expertise", label: { en: "Expertise", uz: "Ko‘nikmalar" } },
