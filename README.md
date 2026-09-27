@@ -4,6 +4,8 @@ A bilingual developer portfolio built with Next.js 16 App Router, React 19, Type
 
 The site exports static HTML and assets. Its supplied background image uses native scroll-driven camera movement, perspective, zoom and SVG light paths.
 
+Live site: [pirimov-portfolio.vercel.app](https://pirimov-portfolio.vercel.app) · [Uzbek](https://pirimov-portfolio.vercel.app/uz/)
+
 ## Local development
 
 Install Node.js 24 and npm, then run:
@@ -43,7 +45,9 @@ Locale selection uses URLs. Each locale has its own server-rendered document lan
 
 ## Deploy with GitHub and Vercel
 
-Import the GitHub repository into Vercel using the Next.js preset:
+The private [GitHub repository](https://github.com/PirimovUktam/portfolio) is connected to the `pirimov-portfolio` project on Vercel's free Hobby plan. Pushes to `main` deploy the production site automatically.
+
+The project uses the Next.js preset:
 
 - Build command: `npm run build`
 - Install command: `npm ci`
