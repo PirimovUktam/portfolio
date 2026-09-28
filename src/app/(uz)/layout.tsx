@@ -6,7 +6,7 @@ import "@/app/globals.css";
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#080c16",
+  themeColor: "#101310",
 };
 
 export default function UzbekLayout({ children }: { children: ReactNode }) {

@@ -2,24 +2,20 @@
 #top { position: relative; isolation: isolate; }
 [data-motion-surface] { position: relative; }
 .hero-stage,.project-stage { isolation: isolate; }
-.cinematic-backdrop { position: fixed; inset: 0; z-index: -1; overflow: clip; pointer-events: none; user-select: none; background: #080d19; }
+.cinematic-backdrop { position: fixed; inset: 0; z-index: -1; overflow: clip; pointer-events: none; user-select: none; background: #101310; }
 .cinematic-poster { position: absolute; inset: -4%; display: block; opacity: .3; transform: scale(1.04); }
-.cinematic-poster img { object-fit: cover; object-position: center; filter: saturate(.6); }
+.cinematic-poster img { object-fit: cover; object-position: center; filter: saturate(.82); }
 .cinematic-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
-.cinematic-light { position: absolute; inset: -12%; background: radial-gradient(ellipse at 76% 45%,#3a568932,transparent 50%),radial-gradient(ellipse at 35% 90%,#4b39642b,transparent 50%); }
-.cinematic-shade { position: absolute; inset: 0; background: linear-gradient(90deg,#080d196b,transparent 56%),linear-gradient(0deg,#080d1966,transparent 25%,transparent 80%,#080d1944); }
+.cinematic-light { position: absolute; inset: -12%; background: radial-gradient(ellipse at 76% 45%,#929a5330,transparent 50%),radial-gradient(ellipse at 35% 90%,#93846322,transparent 50%); }
+.cinematic-shade { position: absolute; inset: 0; background: linear-gradient(90deg,#1013106b,transparent 56%),linear-gradient(0deg,#10131066,transparent 25%,transparent 80%,#10131044); }
 .motion-enabled .cinematic-poster { opacity: calc(.3 - var(--hero-progress,0) * .14); transform: translate3d(calc(var(--hero-progress,0) * -24px),calc(var(--hero-progress,0) * -32px),0) scale(calc(1.04 + var(--hero-progress,0) * .16)); }
 .motion-enabled .cinematic-backdrop:has([data-ready="true"]) .cinematic-poster { opacity: calc(.3 * (1 - var(--hero-progress,0))); }
 .motion-enabled .cinematic-light { transform: translate3d(calc(var(--story-progress,0) * -12%),calc(var(--story-progress,0) * -8%),0) rotate(calc(var(--story-progress,0) * 24deg)); }
 /* Project diagrams carry real content; the shared scene provides their depth. */
-.project-art__sweep { opacity: .3; }
-.project-art__diagram { background: #080d19a6; }
-.project-art__hero { filter: drop-shadow(0 12px 24px #0005); }
-.project-copy,.hero-content { text-shadow: 0 2px 24px #080d1966; }
 @media (max-width: 800px) {
   .cinematic-poster img { object-position: 62% center; filter: none; }
   .cinematic-poster { opacity: .28; }
-  .cinematic-shade { background: #080d1933; }
+  .cinematic-shade { background: #10131033; }
   .motion-enabled .cinematic-poster { opacity: calc(.28 - var(--hero-progress,0) * .12); transform: translateY(calc(var(--hero-progress,0) * -12px)) scale(1.04); }
 }
 @media (prefers-reduced-motion: reduce) {

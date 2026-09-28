@@ -212,16 +212,16 @@ const fragmentSource = `
     float bevel = step(0.5, vMaterial) * (1.0 - step(1.5, vMaterial));
     float hinge = step(1.5, vMaterial) * (1.0 - step(2.5, vMaterial));
     float inlay = step(2.5, vMaterial);
-    vec3 base = mix(vec3(0.41, 0.48, 0.62), vec3(0.65, 0.72, 0.84), bevel);
-    base = mix(base, vec3(0.22, 0.29, 0.42), hinge);
-    vec3 keyColor = mix(vec3(0.79, 0.88, 1.0), vec3(0.79, 0.73, 1.0), uTint);
+    vec3 base = mix(vec3(0.40, 0.42, 0.36), vec3(0.65, 0.66, 0.59), bevel);
+    base = mix(base, vec3(0.16, 0.18, 0.15), hinge);
+    vec3 keyColor = mix(vec3(0.957, 0.949, 0.914), vec3(0.82, 1.0, 0.357), uTint);
     float specular = pow(max(dot(normal, halfVector), 0.0), mix(28.0, 58.0, bevel)) * diffuse;
     float rim = pow(1.0 - max(dot(normal, direction), 0.0), 3.0);
     float joint = 0.84 + 0.16 * smoothstep(0.0, 0.16, min(vLocalY, ${LENGTH.toFixed(2)} - vLocalY));
     vec3 color = base * (0.22 + sky * 0.15 + diffuse * 0.76 + fill * 0.13) * joint * uTone;
     color += keyColor * specular * (0.32 + bevel * 0.23);
-    color += vec3(0.18, 0.35, 0.69) * rim * (0.1 + fill * 0.15);
-    color = mix(color, vec3(0.26, 0.53, 0.94) * (0.72 + diffuse * 0.2), inlay);
+    color += vec3(0.46, 0.49, 0.35) * rim * (0.1 + fill * 0.15);
+    color = mix(color, vec3(0.82, 1.0, 0.357) * (0.72 + diffuse * 0.2), inlay);
     gl_FragColor = vec4(clamp(color * 0.7, 0.0, 1.0), 1.0);
   }
 `;
