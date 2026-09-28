@@ -107,6 +107,10 @@
   .profile-journey-track { gap: 42px; }
 }
 
+@media (max-width: 900px) {
+  .profile-heading h2, .profile-about-heading h2 { font-weight: 700; }
+}
+
 @media (max-width: 760px) {
   .profile-section { padding-block: 64px; }
   .profile-section-number { font-size: 44px; }
@@ -148,7 +152,7 @@
   .profile-skill-icon { grid-row: 1; width: 48px; height: 48px; }
   .profile-skill-icon svg { width: 30px; height: 30px; }
   .profile-skill h3 { font-size: 24px; align-self: center; }
-  .profile-skill ul { grid-column: 2; gap: 5px 14px; }
+  .profile-skill ul { grid-column: 1 / -1; gap: 5px 14px; }
   .profile-skill li:not(:last-child)::after { margin-left: 14px; }
   .profile-service-catalog, .profile-journey-track { grid-template-columns: minmax(0, 1fr); }
   .profile-service, .profile-service:nth-child(even) { padding: 28px 0; border-left: 0; }
@@ -160,6 +164,10 @@
   .profile-journey-marker { width: 58px; height: 58px; margin-bottom: 22px; }
   .profile-journey-marker svg { width: 32px; height: 32px; }
   .profile-journey-entry h3 { font-size: 26px; max-width: 26ch; }
+}
+
+@media (max-width: 359px) {
+  .profile-heading h2, .profile-expertise .profile-heading h2 { font-size: 34px; }
 }
 
 #top[data-motion="off"] .profile-location svg,

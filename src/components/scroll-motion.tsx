@@ -44,6 +44,7 @@ export function ScrollMotion(): null {
     if (!root) return;
 
     const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     const values: MotionValue[] = [];
     const createValue = (element: HTMLElement, property: string): MotionValue => {
       const value = { element, property, current: 0, target: 0, written: null };
@@ -84,6 +85,7 @@ export function ScrollMotion(): null {
 
     let enabled = false;
     let disposed = false;
+    let printing = false;
     let frame: number | null = null;
     let previousTime = 0;
     let geometryDirty = true;
@@ -234,11 +236,25 @@ export function ScrollMotion(): null {
     };
 
     const startMotion = () => {
+      if (printing || reducedMotion.matches) {
+        clearMotion();
+        return;
+      }
       enabled = true;
       geometryDirty = true;
       targetsDirty = true;
       snap = true;
       schedule();
+    };
+
+    const beforePrint = () => {
+      printing = true;
+      clearMotion();
+    };
+
+    const afterPrint = () => {
+      printing = false;
+      startMotion();
     };
 
     const onVisibility = () => {
@@ -247,8 +263,7 @@ export function ScrollMotion(): null {
         frame = null;
         previousTime = 0;
       } else {
-        snap = true;
-        invalidateGeometry();
+        startMotion();
       }
     };
 
@@ -285,13 +300,14 @@ export function ScrollMotion(): null {
     tracks.forEach(({ element }) => resizeObserver?.observe(element));
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", invalidateGeometry, { passive: true });
-    window.addEventListener("beforeprint", clearMotion);
-    window.addEventListener("afterprint", startMotion);
+    window.addEventListener("beforeprint", beforePrint);
+    window.addEventListener("afterprint", afterPrint);
     document.addEventListener("focusin", onFocus);
     document.addEventListener("focusout", onFocus);
     document.addEventListener("visibilitychange", onVisibility);
     root.addEventListener("load", invalidateGeometry, true);
     finePointer.addEventListener("change", resetPointers);
+    reducedMotion.addEventListener("change", startMotion);
     void document.fonts.ready.then(() => { if (!disposed) invalidateGeometry(); });
     startMotion();
 
@@ -303,13 +319,14 @@ export function ScrollMotion(): null {
       pointerCleanups.forEach((cleanup) => cleanup());
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", invalidateGeometry);
-      window.removeEventListener("beforeprint", clearMotion);
-      window.removeEventListener("afterprint", startMotion);
+      window.removeEventListener("beforeprint", beforePrint);
+      window.removeEventListener("afterprint", afterPrint);
       document.removeEventListener("focusin", onFocus);
       document.removeEventListener("focusout", onFocus);
       document.removeEventListener("visibilitychange", onVisibility);
       root.removeEventListener("load", invalidateGeometry, true);
       finePointer.removeEventListener("change", resetPointers);
+      reducedMotion.removeEventListener("change", startMotion);
     };
   }, [pathname]);
 

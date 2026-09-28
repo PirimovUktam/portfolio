@@ -213,8 +213,8 @@ export const portfolio: Portfolio = {
       { label: { en: "Applied AI", uz: "Amaliy AI" }, icon: "brain" },
     ],
     intro: {
-      en: "Turning ideas into products that solve real problems.",
-      uz: "G‘oyadan real muammoni hal qiladigan mahsulotgacha.",
+      en: "Flutter apps and web products, built with clean architecture.",
+      uz: "Flutter va veb mahsulotlar — puxta arxitektura asosida.",
     },
     primaryAction: { en: "Explore my work", uz: "Loyihalarimni ko‘rish" },
     secondaryAction: { en: "Get in touch", uz: "Bog‘lanish" },

@@ -131,6 +131,9 @@
     --cinema-shade-right: rgb(16 19 16 / .66);
   }
   .motion-backdrop__light-trace { stroke-width: 1.6px; }
+  /* One moving photo layer avoids extra full-screen textures on phone GPUs. */
+  .motion-backdrop__image { filter: none; }
+  .motion-backdrop__light-path,.motion-backdrop__atmosphere { display: none; }
   .motion-backdrop__atmosphere {
     transform: translate3d(calc((var(--cinema-progress) - .5) * -16px),calc((var(--cinema-progress) - .5) * 12px),0)
       scale(calc(1.03 + var(--cinema-progress) * .04));

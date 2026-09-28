@@ -127,7 +127,7 @@
   .project-bottom { gap: 16px 22px; margin-top: 24px; }
   .project-action { min-height: 54px; font-size: 16px; padding: 12px 16px; gap: 26px; }
   .project-links .text-link { font-size: 16px; }
-  .project-art__canvas { min-height: 378px; }
+  .project-art__canvas { min-height: 0; }
   .project-art__sweep { height: 220px; width: 86%; left: 7%; }
   .project-art__hero { height: 220px; }
   .project-art__hero > svg { width: 152px; height: 152px; }
@@ -138,7 +138,7 @@
   .project-flow li > svg { width: 20px; height: 20px; }
   .flow-number { font-size: 14px; }
   .project-focus li { font-size: 16px; padding-block: 12px; gap: 14px; }
-  .project-art--shopping .project-art__canvas { min-height: 464px; }
+  .project-art--shopping .project-art__canvas { min-height: 0; }
   .project-art--shopping .project-art__sweep { height: 230px; width: 72%; left: 20%; }
   .project-art--shopping .project-art__hero { height: 230px; padding-left: 12%; }
   .project-art--shopping .project-art__hero > svg { width: 154px; height: 154px; }

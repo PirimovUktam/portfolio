@@ -37,7 +37,7 @@ export function Hero({ locale }: { locale: Locale }) {
               <div className="portrait-depth" aria-hidden="true" />
               <figure className="hero-portrait">
                 <div className="portrait-crop">
-                  <PortfolioImage image={profile.image} locale={locale} unavailableLabel={portfolio.ui.imageUnavailable[locale]} priority sizes="(max-width: 600px) 42vw, (max-width: 1000px) 40vw, 480px" />
+                  <PortfolioImage image={profile.image} locale={locale} unavailableLabel={portfolio.ui.imageUnavailable[locale]} priority sizes="(max-width: 600px) 50vw, (max-width: 1000px) 40vw, 480px" />
                 </div>
                 <figcaption><span>{profile.name}</span><ArrowUpRight size={30} aria-hidden="true" /></figcaption>
               </figure>
