@@ -140,7 +140,7 @@ export function ScrollMotion(): null {
                 track.top + track.height - viewportHeight,
               )
             : progressBetween(
-                track.top - viewportHeight * 0.75,
+                Math.max(0, track.top - viewportHeight * 0.75),
                 track.top + track.height - viewportHeight * 0.25,
               );
         }
@@ -171,7 +171,9 @@ export function ScrollMotion(): null {
       let unsettled = false;
       values.forEach((value) => {
         const difference = value.target - value.current;
-        if (snap || Math.abs(difference) < 0.0005) value.current = value.target;
+        // Reduced motion removes trailing inertia, while scroll remains in
+        // direct control of the scene instead of disabling the experience.
+        if (snap || reducedMotion.matches || Math.abs(difference) < 0.0005) value.current = value.target;
         else {
           value.current += difference * blend;
           unsettled = true;
@@ -236,7 +238,7 @@ export function ScrollMotion(): null {
     };
 
     const startMotion = () => {
-      if (printing || reducedMotion.matches) {
+      if (printing) {
         clearMotion();
         return;
       }

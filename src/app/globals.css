@@ -312,9 +312,16 @@ img { max-width: 100%; }
   .hero-art { max-width: 360px; }
   .hero-symbol { width: 108px; height: 108px; left: -45px; bottom: 48px; }
 }
+/* Short laptop windows still get kinetic type without clipping a pinned scene. */
+@media (min-width: 1000px) and (max-height: 759px) {
+  .motion-enabled .hero-word:nth-child(1) { transform: translateX(calc(var(--scene-progress,0) * -60px)); }
+  .motion-enabled .hero-word:nth-child(2) { transform: translateX(calc(var(--scene-progress,0) * 64px)); }
+  .motion-enabled .hero-word:nth-child(3) { transform: translateX(calc(var(--scene-progress,0) * -40px)); }
+}
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  #top:not([data-motion="on"]) *,#top:not([data-motion="on"]) *::before,#top:not([data-motion="on"]) *::after { animation: none !important; transition: none !important; }
+  /* Omit timed entrances/hover transitions; direct scroll transforms remain. */
+  #top *,#top *::before,#top *::after { animation: none !important; transition: none !important; }
   #top:not([data-motion="on"]) .reading-progress { display: none; }
 }
 @media print {
