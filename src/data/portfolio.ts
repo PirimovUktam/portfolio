@@ -35,6 +35,7 @@ export interface Project {
   title: string;
   icon: IconName;
   category: LocalizedText;
+  role?: LocalizedText;
   summary: LocalizedText;
   description: LocalizedText;
   contributions: LocalizedText[];
@@ -50,6 +51,16 @@ export interface Project {
     caption: LocalizedText;
     steps?: LocalizedText[];
   };
+}
+
+export interface Recognition {
+  id: string;
+  title: LocalizedText;
+  distinction: LocalizedText;
+  description: LocalizedText;
+  projectSlug?: string;
+  image?: PortfolioImage;
+  evidenceUrl?: string;
 }
 
 export interface SectionContent {
@@ -97,6 +108,7 @@ export interface Portfolio {
     sourceCode: LocalizedText;
     backToProjects: LocalizedText;
     projectOverview: LocalizedText;
+    myRole: LocalizedText;
     myContribution: LocalizedText;
     technologies: LocalizedText;
     nextProject: LocalizedText;
@@ -105,6 +117,7 @@ export interface Portfolio {
     projectIndex: LocalizedText;
     focus: LocalizedText;
     emailAction: LocalizedText;
+    viewCertificate: LocalizedText;
     notFound: {
       title: LocalizedText;
       description: LocalizedText;
@@ -112,7 +125,7 @@ export interface Portfolio {
     };
   };
   sections: Record<
-    "work" | "about" | "expertise" | "services" | "journey" | "contact",
+    "work" | "recognition" | "about" | "expertise" | "services" | "journey" | "contact",
     SectionContent
   >;
   about: {
@@ -127,6 +140,7 @@ export interface Portfolio {
     title: LocalizedText;
     description: LocalizedText;
   }[];
+  recognitions: Recognition[];
   projects: Project[];
   socials: { name: string; url: string; icon: "github" | "send" }[];
   footer: { note: LocalizedText };
@@ -241,6 +255,7 @@ export const portfolio: Portfolio = {
     sourceCode: { en: "Source code", uz: "Manba kodi" },
     backToProjects: { en: "Back to projects", uz: "Loyihalarga qaytish" },
     projectOverview: { en: "Project overview", uz: "Loyiha haqida" },
+    myRole: { en: "My role", uz: "Mening rolim" },
     myContribution: { en: "My contribution", uz: "Mening hissam" },
     technologies: { en: "Technologies", uz: "Texnologiyalar" },
     nextProject: { en: "Next project", uz: "Keyingi loyiha" },
@@ -249,6 +264,7 @@ export const portfolio: Portfolio = {
     projectIndex: { en: "Project index", uz: "Loyihalar ro‘yxati" },
     focus: { en: "Focus", uz: "Yo‘nalish" },
     emailAction: { en: "Start a conversation", uz: "Suhbat boshlash" },
+    viewCertificate: { en: "View certificate", uz: "Sertifikatni ko‘rish" },
     notFound,
   },
   sections: {
@@ -256,8 +272,16 @@ export const portfolio: Portfolio = {
       eyebrow: { en: "Selected work", uz: "Tanlangan loyihalar" },
       heading: { en: "Ideas into products.", uz: "G‘oyadan mahsulotgacha." },
       intro: {
-        en: "Legal guidance, mobile commerce and a practical location finder. Different problems, a shared focus on useful experiences.",
-        uz: "Huquqiy yordam, mobil savdo va dorixona manzilini izlash. Turli muammolar, yagona maqsad — foydali va qulay tajriba.",
+        en: "Adaptive learning, legal guidance, mobile commerce and a practical location finder. Different problems, a shared focus on useful experiences.",
+        uz: "Moslashuvchan ta’lim, huquqiy yordam, mobil savdo va dorixona manzilini izlash. Turli muammolar, yagona maqsad — foydali va qulay tajriba.",
+      },
+    },
+    recognition: {
+      eyebrow: { en: "Recognition", uz: "E’tirof" },
+      heading: { en: "Hackathon experience.", uz: "Xakaton tajribasi." },
+      intro: {
+        en: "Taking an adaptive learning MVP from product concept to the National AI Hackathon’s Qarshi stage.",
+        uz: "Moslashuvchan ta’lim MVP’sini mahsulot konsepsiyasidan Milliy AI xakatonining Qarshi bosqichigacha olib chiqish.",
       },
     },
     about: {
@@ -440,7 +464,71 @@ export const portfolio: Portfolio = {
       },
     },
   ],
+  recognitions: [
+    {
+      id: "national-ai-hackathon-qarshi",
+      title: { en: "National AI Hackathon", uz: "Milliy AI xakatoni" },
+      distinction: { en: "Qarshi stage · Finalist", uz: "Qarshi bosqichi · Finalchi" },
+      description: {
+        en: "Participated in the Qarshi stage with BilimYo‘l Smart Edu, an adaptive learning MVP. My work covered the product concept, architecture, MVP development and AI integration.",
+        uz: "BilimYo‘l Smart Edu moslashuvchan ta’lim MVP’si bilan Qarshi bosqichida qatnashdim. Mening hissam — mahsulot konsepsiyasi, arxitektura, MVP ishlab chiqish va AI integratsiyasi.",
+      },
+      projectSlug: "bilimyol-smart-edu",
+    },
+  ],
   projects: [
+    {
+      slug: "bilimyol-smart-edu",
+      title: "BilimYo‘l Smart Edu",
+      icon: "graduation",
+      category: { en: "EdTech / Web, Mobile & AI", uz: "EdTech / Veb, mobil va AI" },
+      role: {
+        en: "Product Manager / Full-Stack Developer",
+        uz: "Mahsulot menejeri / Full-Stack dasturchi",
+      },
+      summary: {
+        en: "An adaptive learning MVP that identifies knowledge gaps and guides learners through personalized roadmaps, interactive lessons and targeted practice.",
+        uz: "Bilim bo‘shliqlarini aniqlab, o‘quvchini shaxsiy yo‘l xaritasi, interaktiv darslar va maqsadli mashqlar orqali yo‘naltiradigan moslashuvchan ta’lim MVP’si.",
+      },
+      description: {
+        en: "BilimYo‘l Smart Edu helps learners understand their strengths and knowledge gaps in mathematics and English. Placement assessments inform a knowledge map and an adaptive learning path with lessons and reinforcement exercises. The project combines React web and Flutter mobile applications with Supabase authentication and learner data. The web application also includes parent, teacher and admin dashboards, plus Gemini integrations for tutor feedback and lesson generation.",
+        uz: "BilimYo‘l Smart Edu o‘quvchiga matematika va ingliz tili bo‘yicha kuchli tomonlari hamda bilim bo‘shliqlarini aniqlashga yordam beradi. Diagnostik test natijalari asosida bilim xaritasi, darslar va mustahkamlash mashqlaridan iborat moslashuvchan o‘quv yo‘li shakllanadi. Loyiha React veb va Flutter mobil ilovalarini Supabase autentifikatsiyasi hamda o‘quvchi ma’lumotlari bilan birlashtiradi. Veb ilovada ota-ona, o‘qituvchi va administrator panellari, shuningdek, xatolarni tushuntirish va dars yaratish uchun Gemini integratsiyasi mavjud.",
+      },
+      contributions: [
+        { en: "Product concept", uz: "Mahsulot konsepsiyasi" },
+        { en: "Application architecture", uz: "Ilova arxitekturasi" },
+        { en: "MVP development", uz: "MVP ishlab chiqish" },
+        { en: "AI integration", uz: "AI integratsiyasi" },
+      ],
+      technologies: [
+        "React",
+        "TypeScript",
+        "Vite",
+        "Tailwind CSS",
+        "Zustand",
+        "Flutter",
+        "Dart",
+        "Riverpod",
+        "Supabase",
+        "PostgreSQL",
+        "Edge Functions",
+        "Google Gemini",
+      ],
+      githubUrl: "https://github.com/PirimovUktam/bilimyol-smart-edu",
+      visual: {
+        kind: "flow",
+        wordmark: "BILIMYO‘L",
+        caption: {
+          en: "Learning flow / Assessment to targeted practice",
+          uz: "O‘quv jarayoni / Diagnostikadan maqsadli mashqqacha",
+        },
+        steps: [
+          { en: "Assessment", uz: "Diagnostika" },
+          { en: "Learning path", uz: "O‘quv yo‘li" },
+          { en: "Practice", uz: "Mashq" },
+        ],
+      },
+    },
     {
       slug: "lexhub",
       title: "LexHub",

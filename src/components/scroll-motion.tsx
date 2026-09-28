@@ -15,6 +15,7 @@ type ScrollTrack = {
   element: HTMLElement;
   top: number;
   height: number;
+  stageHeight?: number;
   stickyTop: number;
   pinned: boolean;
   enter?: MotionValue;
@@ -52,6 +53,7 @@ export function ScrollMotion(): null {
       return value;
     };
     const pageProgress = createValue(root, "--page-progress");
+    const scrollVelocity = createValue(root, "--scroll-velocity");
     const tracks: ScrollTrack[] = [
       ...Array.from(root.querySelectorAll<HTMLElement>("[data-scroll-scene]"),
         (element) => ({
@@ -93,23 +95,35 @@ export function ScrollMotion(): null {
     let snap = true;
     let viewportHeight = window.innerHeight;
     let scrollRange = 1;
+    let lastScrollY = window.scrollY;
+    let lastScrollTime = 0;
 
     const measure = () => {
       viewportHeight = Math.max(1, window.innerHeight);
-      scrollRange = Math.max(1, document.documentElement.scrollHeight - viewportHeight);
       const headerHeight = root.querySelector<HTMLElement>(".site-header")?.offsetHeight ?? 80;
       tracks.forEach((track) => {
-        track.top = layoutTop(track.element);
-        track.height = track.element.offsetHeight;
         const stickyChild = track.element.matches("[data-scroll-scene]")
           ? track.element.querySelector<HTMLElement>("[data-scroll-sticky]")
           : null;
+        if (stickyChild) {
+          track.stageHeight = stickyChild.offsetHeight;
+          // A tall chapter scrolls fully into view before it holds. Its links
+          // remain reachable even on short laptops or with enlarged text.
+          track.element.style.setProperty("--scene-stage-height", `${track.stageHeight}px`);
+        }
         track.pinned = Boolean(stickyChild && getComputedStyle(stickyChild).position === "sticky");
         const configuredTop = Number.parseFloat(
-          getComputedStyle(track.element).getPropertyValue("--scene-sticky-top"),
+          stickyChild ? getComputedStyle(stickyChild).top : "",
         );
         track.stickyTop = Number.isFinite(configuredTop) ? configuredTop : headerHeight;
       });
+      // Scene heights above can move all following sections. Measure positions
+      // only after every scene has received its intrinsic stage height.
+      tracks.forEach((track) => {
+        track.top = layoutTop(track.element);
+        track.height = track.element.offsetHeight;
+      });
+      scrollRange = Math.max(1, document.documentElement.scrollHeight - viewportHeight);
       tilts.forEach((tilt) => { tilt.bounds = null; });
       geometryDirty = false;
       targetsDirty = true;
@@ -137,7 +151,7 @@ export function ScrollMotion(): null {
           track.progress.target = track.pinned
             ? progressBetween(
                 track.top - track.stickyTop,
-                track.top + track.height - viewportHeight,
+                track.top + track.height - (track.stageHeight ?? viewportHeight) - track.stickyTop,
               )
             : progressBetween(
                 Math.max(0, track.top - viewportHeight * 0.75),
@@ -168,7 +182,8 @@ export function ScrollMotion(): null {
 
       const elapsed = previousTime ? Math.min(64, time - previousTime) : 16;
       const blend = 1 - Math.exp(-elapsed / 95);
-      let unsettled = false;
+      if (reducedMotion.matches || time - lastScrollTime > 80) scrollVelocity.target = 0;
+      let unsettled = Math.abs(scrollVelocity.target) > 0.0005;
       values.forEach((value) => {
         const difference = value.target - value.current;
         // Reduced motion removes trailing inertia, while scroll remains in
@@ -210,6 +225,11 @@ export function ScrollMotion(): null {
     };
 
     const onScroll = () => {
+      const now = performance.now();
+      const elapsed = Math.max(16, now - lastScrollTime);
+      scrollVelocity.target = reducedMotion.matches ? 0 : clamp((window.scrollY - lastScrollY) / elapsed / 2, -1, 1);
+      lastScrollY = window.scrollY;
+      lastScrollTime = now;
       targetsDirty = true;
       // A moved document invalidates pointer bounds, but needs no layout reads.
       tilts.forEach((tilt) => { tilt.bounds = null; });
@@ -228,6 +248,7 @@ export function ScrollMotion(): null {
       previousTime = 0;
       root.classList.remove("motion-enabled");
       root.dataset.motion = "off";
+      root.style.setProperty("--ambient-play-state", "paused");
       values.forEach((value) => {
         value.element.style.removeProperty(value.property);
         value.current = 0;
@@ -243,6 +264,12 @@ export function ScrollMotion(): null {
         return;
       }
       enabled = true;
+      root.style.setProperty("--ambient-play-state", "running");
+      lastScrollY = window.scrollY;
+      lastScrollTime = 0;
+      if (reducedMotion.matches) {
+        tilts.forEach((tilt) => { tilt.x.target = 0; tilt.y.target = 0; });
+      }
       geometryDirty = true;
       targetsDirty = true;
       snap = true;
@@ -261,6 +288,9 @@ export function ScrollMotion(): null {
 
     const onVisibility = () => {
       if (document.hidden) {
+        root.style.setProperty("--ambient-play-state", "paused");
+        scrollVelocity.target = 0;
+        scrollVelocity.current = 0;
         if (frame !== null) window.cancelAnimationFrame(frame);
         frame = null;
         previousTime = 0;
@@ -271,7 +301,7 @@ export function ScrollMotion(): null {
 
     const pointerCleanups = tilts.map((tilt) => {
       const move = (event: PointerEvent) => {
-        if (!enabled || !finePointer.matches || event.pointerType === "touch") return;
+        if (!enabled || reducedMotion.matches || !finePointer.matches || event.pointerType === "touch") return;
         tilt.bounds ??= tilt.element.getBoundingClientRect();
         const { left, top, width, height } = tilt.bounds;
         if (!width || !height) return;
@@ -300,6 +330,13 @@ export function ScrollMotion(): null {
       : undefined;
     resizeObserver?.observe(root);
     tracks.forEach(({ element }) => resizeObserver?.observe(element));
+    root.querySelectorAll<HTMLElement>("[data-scroll-sticky]").forEach((element) => resizeObserver?.observe(element));
+    const surfaceObserver = new IntersectionObserver((entries) => {
+      entries.forEach(({ target, isIntersecting }) => {
+        (target as HTMLElement).dataset.motionVisible = String(isIntersecting);
+      });
+    });
+    root.querySelectorAll<HTMLElement>("[data-motion-surface]").forEach((element) => surfaceObserver.observe(element));
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", invalidateGeometry, { passive: true });
     window.addEventListener("beforeprint", beforePrint);
@@ -318,6 +355,10 @@ export function ScrollMotion(): null {
       clearMotion();
       delete root.dataset.motion;
       resizeObserver?.disconnect();
+      surfaceObserver.disconnect();
+      root.style.removeProperty("--ambient-play-state");
+      root.querySelectorAll<HTMLElement>("[data-motion-surface]").forEach((element) => { delete element.dataset.motionVisible; });
+      tracks.forEach(({ element }) => element.style.removeProperty("--scene-stage-height"));
       pointerCleanups.forEach((cleanup) => cleanup());
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", invalidateGeometry);

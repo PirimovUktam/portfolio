@@ -33,6 +33,7 @@ export function ProjectPage({ locale, project }: { locale: Locale; project: Proj
             <p>{project.description[locale]}</p>
           </div>
           <div className="project-detail-aside">
+            {project.role && <div data-reveal><h2 className="eyebrow">{portfolio.ui.myRole[locale]}</h2><p className="detail-contributions">{project.role[locale]}</p></div>}
             {project.contributions.length > 0 && <div data-reveal><h2 className="eyebrow">{portfolio.ui.myContribution[locale]}</h2><ul className="detail-contributions">{project.contributions.map((item) => <li key={item.en}>{item[locale]}</li>)}</ul></div>}
             {project.technologies.length > 0 && <div data-reveal><h2 className="eyebrow">{portfolio.ui.technologies[locale]}</h2><ul className="detail-tech">{project.technologies.map((technology) => <li key={technology}>{technology}</li>)}</ul></div>}
           </div>

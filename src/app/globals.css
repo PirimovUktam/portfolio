@@ -97,19 +97,19 @@ img { max-width: 100%; }
 .scroll-cue-icon { width: 46px; height: 46px; display: grid; place-items: center; border: 1px solid #707967; border-radius: 50%; color: var(--lime); }
 .hero-index { display: flex; align-items: center; gap: 18px; font-size: 16px; color: #b8c2af; }
 .hero-index > span:first-child { color: var(--lime); font-variant-numeric: tabular-nums; }
-.motion-enabled .hero-portrait { transform: perspective(1200px) translate3d(calc(var(--scene-progress,0) * -90px),calc(var(--scene-progress,0) * -100px),0) rotateX(calc(var(--pointer-y,0) * -8deg)) rotateY(calc(var(--scene-progress,0) * 24deg + var(--pointer-x,0) * 10deg)) rotateZ(calc(-3deg + var(--scene-progress,0) * 10deg)) scale(calc(1 + var(--scene-progress,0) * .16)); }
+.motion-enabled .hero-portrait { transform: perspective(1200px) translate3d(calc(var(--scene-progress,0) * -50px),calc(var(--scene-progress,0) * -34px),0) rotateX(calc(var(--pointer-y,0) * -5deg)) rotateY(calc(var(--scene-progress,0) * 18deg + var(--pointer-x,0) * 7deg)) rotateZ(calc(-3deg + var(--scene-progress,0) * 8deg)) scale(calc(1 + var(--scene-progress,0) * .08)); }
 .motion-enabled .portrait-depth { transform: translate3d(calc(var(--scene-progress,0) * 70px),calc(var(--scene-progress,0) * 40px),-30px) rotate(calc(5deg + var(--scene-progress,0) * 16deg)); }
 .motion-enabled .hero-symbol { transform: rotate(calc(var(--scene-progress,0) * 220deg)); }
-.motion-enabled .hero-word-mask > span { animation: hero-arrive .85s both var(--ease); animation-delay: calc(var(--word-index) * 100ms); }
-@keyframes hero-arrive { from { opacity: .1; transform: translateY(70px) rotateX(-35deg); } to { opacity: 1; transform: none; } }
-@media (min-width: 1000px) and (min-height: 760px) {
-  .motion-enabled .hero-scene { height: 175svh; }
-  .motion-enabled .hero-stage { position: sticky; top: 84px; height: calc(100svh - 84px); min-height: 675px; }
-  .hero { min-height: calc(100svh - 84px); display: flex; flex-direction: column; justify-content: space-between; }
+.motion-enabled .hero-word-mask > span { animation: hero-arrive .6s both var(--ease); animation-delay: calc(var(--word-index) * 70ms); }
+@keyframes hero-arrive { from { transform: translateY(16px); } to { transform: none; } }
+@media (min-width: 1000px) and (min-height: 600px) {
+  .motion-enabled .hero-scene { min-height: calc(var(--scene-stage-height,100svh) + 55svh); }
+  .motion-enabled .hero-stage { position: sticky; top: min(84px,calc(100svh - var(--scene-stage-height,100svh) - 12px)); }
+  .hero { min-height: calc(100svh - 96px); display: flex; flex-direction: column; justify-content: space-between; }
   .hero-grid { flex: 1; }
-  .motion-enabled .hero-word:nth-child(1) { transform: translateX(calc(var(--scene-progress,0) * -140px)); }
-  .motion-enabled .hero-word:nth-child(2) { transform: translateX(calc(var(--scene-progress,0) * 125px)); }
-  .motion-enabled .hero-word:nth-child(3) { transform: translateX(calc(var(--scene-progress,0) * -70px)); }
+  .motion-enabled .hero-word:nth-child(1) { transform: translateX(calc(var(--scene-progress,0) * -36px)); }
+  .motion-enabled .hero-word:nth-child(2) { transform: translateX(calc(var(--scene-progress,0) * 70px)); }
+  .motion-enabled .hero-word:nth-child(3) { transform: translateX(calc(var(--scene-progress,0) * -24px)); }
 }
 
 /* Section titles and controls share a small, deliberate type scale. */
@@ -312,9 +312,17 @@ img { max-width: 100%; }
   .hero-art { max-width: 360px; }
   .hero-symbol { width: 108px; height: 108px; left: -45px; bottom: 48px; }
 }
-/* Short laptop windows still get kinetic type without clipping a pinned scene. */
+/* Compact vertical rhythm lets laptop users see the hero during its hold. */
 @media (min-width: 1000px) and (max-height: 759px) {
-  .motion-enabled .hero-word:nth-child(1) { transform: translateX(calc(var(--scene-progress,0) * -60px)); }
+  .hero { padding-block: 16px; }
+  .hero-grid { padding-block: 12px 20px; }
+  .hero-title { font-size: clamp(64px,5.7vw,84px); }
+  .hero-role { margin-bottom: 12px; }
+  .hero-art { max-width: 300px; }
+  .hero-intro { margin-top: 16px; }
+  .hero-cta { margin-top: 16px; }
+  .hero-bottom { padding-top: 12px; }
+  .motion-enabled .hero-word:nth-child(1) { transform: translateX(calc(var(--scene-progress,0) * -36px)); }
   .motion-enabled .hero-word:nth-child(2) { transform: translateX(calc(var(--scene-progress,0) * 64px)); }
   .motion-enabled .hero-word:nth-child(3) { transform: translateX(calc(var(--scene-progress,0) * -40px)); }
 }
@@ -328,6 +336,7 @@ img { max-width: 100%; }
   .site-header { position: static; }
   .reading-progress { display: none; }
   .motion-enabled .hero-scene { height: auto; }
+  .motion-enabled .hero-scene { min-height: 0; }
   .motion-enabled .hero-stage { position: static; height: auto; min-height: 0; }
   .hero { min-height: 0; }
   .motion-enabled [data-reveal] { transform: none; }

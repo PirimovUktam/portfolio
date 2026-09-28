@@ -5,6 +5,7 @@ import { SelectedWork } from "./selected-work";
 import { ProfileSections } from "./profile-sections";
 import { Contact } from "./contact";
 import { ScrollMotion } from "./scroll-motion";
+import { Recognition } from "./recognition";
 
 export function PortfolioPage({ locale }: { locale: Locale }) {
   return (
@@ -15,6 +16,7 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
       <main id="main">
         <Hero locale={locale} />
         <SelectedWork locale={locale} />
+        <Recognition locale={locale} />
         <ProfileSections locale={locale} />
       </main>
       <Contact locale={locale} />

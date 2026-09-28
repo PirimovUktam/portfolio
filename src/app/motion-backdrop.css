@@ -15,6 +15,8 @@
   --cinema-shade-right: rgb(244 242 233 / .88);
   --cinema-edge-shade: rgb(244 242 233 / .28);
   --cinema-atmosphere: .55;
+  --cinema-velocity-travel: 8px;
+  --cinema-velocity: 0;
   position: absolute;
   inset: 0;
   z-index: -1;
@@ -39,7 +41,7 @@
   height: max(100cqh,calc(100cqw / var(--backdrop-ratio,1.7768)));
   transform-origin: center;
   transform: translate(-50%,-50%)
-    translate3d(calc(var(--cinema-anchor-x) + (var(--cinema-progress) - .5) * var(--cinema-pan-x)),calc((var(--cinema-progress) - .5) * var(--cinema-pan-y)),0)
+    translate3d(calc(var(--cinema-anchor-x) + (var(--cinema-progress) - .5) * var(--cinema-pan-x)),calc((var(--cinema-progress) - .5) * var(--cinema-pan-y) + var(--cinema-velocity) * var(--cinema-progress) * (1 - var(--cinema-progress)) * 4 * var(--cinema-velocity-travel)),0)
     rotate(calc((var(--cinema-progress) - .5) * var(--cinema-tilt)))
     scale(calc(var(--cinema-zoom-start) + var(--cinema-progress) * var(--cinema-zoom-travel)));
 }
@@ -78,6 +80,41 @@
     radial-gradient(ellipse at 83% 55%,rgb(245 174 111 / .16),transparent 44%),
     linear-gradient(116deg,transparent 30%,rgb(146 185 232 / .1) 53%,transparent 73%);
   opacity: var(--cinema-atmosphere);
+}
+.motion-backdrop__particles {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  color: #e3e8cd;
+  opacity: .6;
+  transform: translate3d(0,calc((var(--cinema-progress) - .5) * -54px),0);
+}
+/* Only visible desktop scenes breathe. No background JavaScript render loop. */
+.motion-enabled .motion-backdrop__atmosphere {
+  animation: atmosphere-drift 18s ease-in-out infinite alternate;
+  animation-play-state: paused;
+}
+.motion-enabled .motion-backdrop__particles > g {
+  animation: particle-drift 14s ease-in-out infinite alternate;
+  animation-play-state: paused;
+}
+.motion-enabled .motion-backdrop__particles > g + g { animation-delay: -7s; animation-direction: alternate-reverse; }
+[data-motion-visible="true"] > .motion-backdrop,
+[data-motion-visible="true"] > [data-scroll-sticky] > .motion-backdrop { --cinema-velocity: var(--scroll-velocity,0); }
+[data-motion-visible="true"] > .motion-backdrop .motion-backdrop__atmosphere,
+[data-motion-visible="true"] > [data-scroll-sticky] > .motion-backdrop .motion-backdrop__atmosphere,
+[data-motion-visible="true"] > .motion-backdrop .motion-backdrop__particles > g,
+[data-motion-visible="true"] > [data-scroll-sticky] > .motion-backdrop .motion-backdrop__particles > g {
+  animation-play-state: var(--ambient-play-state,paused);
+}
+@keyframes atmosphere-drift {
+  from { translate: -1% 0; }
+  to { translate: 2% -1.5%; }
+}
+@keyframes particle-drift {
+  from { transform: translate(0,8px); opacity: .35; }
+  to { transform: translate(12px,-16px); opacity: .85; }
 }
 .motion-backdrop__shade {
   position: absolute;
@@ -118,6 +155,7 @@
 
 @media (max-width: 800px) {
   .motion-backdrop {
+    --cinema-velocity-travel: 3px;
     --cinema-pan-x: 26px;
     --cinema-pan-y: -18px;
     --cinema-tilt: .36deg;
@@ -133,13 +171,15 @@
   .motion-backdrop__light-trace { stroke-width: 1.6px; }
   /* One moving photo layer avoids extra full-screen textures on phone GPUs. */
   .motion-backdrop__image { filter: none; }
-  .motion-backdrop__light-path,.motion-backdrop__atmosphere { display: none; }
+  .motion-backdrop__light-path,.motion-backdrop__atmosphere,.motion-backdrop__particles { display: none; }
   .motion-backdrop__atmosphere {
     transform: translate3d(calc((var(--cinema-progress) - .5) * -16px),calc((var(--cinema-progress) - .5) * 12px),0)
       scale(calc(1.03 + var(--cinema-progress) * .04));
   }
 }
 @media (prefers-reduced-motion: reduce) {
+  .motion-backdrop { --cinema-velocity-travel: 0px; --cinema-pan-x: 12px; --cinema-pan-y: -8px; --cinema-tilt: 0deg; --cinema-zoom-travel: .03; }
+  .motion-backdrop__particles { display: none; }
   #top:not([data-motion="on"]) .motion-backdrop { --cinema-progress: .35; }
 }
 @media print { .motion-backdrop { display: none; } }

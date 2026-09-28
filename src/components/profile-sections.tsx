@@ -27,6 +27,7 @@ function ProfileHeading({
 }
 
 export function ProfileSections({ locale }: { locale: Locale }) {
+  const sectionNumber = (number: number) => String(number + (portfolio.recognitions.length ? 1 : 0)).padStart(2, "0");
   return (
     <>
       <section
@@ -40,7 +41,7 @@ export function ProfileSections({ locale }: { locale: Locale }) {
         <div className="container profile-about-grid">
           <header className="profile-about-heading" data-reveal>
             <p className="profile-kicker">
-              <span className="profile-section-number" aria-hidden="true">02</span>
+              <span className="profile-section-number" aria-hidden="true">{sectionNumber(2)}</span>
               <span>{portfolio.sections.about.eyebrow[locale]}</span>
             </p>
             <h2 id="about-heading">{portfolio.about.statement[locale]}</h2>
@@ -72,7 +73,7 @@ export function ProfileSections({ locale }: { locale: Locale }) {
       >
         <MotionBackdrop />
         <div className="container profile-expertise-layout">
-          <ProfileHeading section="expertise" number="03" locale={locale} />
+          <ProfileHeading section="expertise" number={sectionNumber(3)} locale={locale} />
           <div className="profile-skills-list">
             {portfolio.skills.map((skill) => (
               <article className="profile-skill" key={skill.category.en} data-reveal>
@@ -102,7 +103,7 @@ export function ProfileSections({ locale }: { locale: Locale }) {
       >
         <MotionBackdrop />
         <div className="container">
-          <ProfileHeading section="services" number="04" locale={locale} />
+          <ProfileHeading section="services" number={sectionNumber(4)} locale={locale} />
           <ol className="profile-service-catalog">
             {portfolio.services.map((service, index) => (
               <li key={service.title.en} className="profile-service" data-reveal>
@@ -135,7 +136,7 @@ export function ProfileSections({ locale }: { locale: Locale }) {
       >
         <MotionBackdrop />
         <div className="container">
-          <ProfileHeading section="journey" number="05" locale={locale} />
+          <ProfileHeading section="journey" number={sectionNumber(5)} locale={locale} />
           <div className="profile-journey-track">
             {portfolio.journey.map((item) => (
               <article key={item.title.en} className="profile-journey-entry" data-reveal>

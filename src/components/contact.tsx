@@ -9,7 +9,7 @@ export function Contact({ locale }: { locale: Locale }) {
     <footer id="contact" className="dark-section contact-section" data-scroll-section data-motion-surface aria-labelledby="contact-heading">
       <MotionBackdrop />
       <div className="container">
-        <div className="section-kicker"><span>06</span><span>{content.eyebrow[locale]}</span></div>
+        <div className="section-kicker"><span>{portfolio.recognitions.length ? "07" : "06"}</span><span>{content.eyebrow[locale]}</span></div>
         <div className="contact-grid" data-reveal>
           <h2 className="display contact-title" id="contact-heading">{content.heading[locale]}</h2>
           <div className="contact-aside"><Asterisk size={64} strokeWidth={1} aria-hidden="true" /><p>{content.intro[locale]}</p></div>

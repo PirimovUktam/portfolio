@@ -2,7 +2,9 @@
 
 A bilingual developer portfolio built with Next.js 16 App Router, React 19, TypeScript, Tailwind CSS 4 and Lucide icons. Syne and Manrope provide the display and body typography.
 
-The site exports static HTML and assets. Its supplied background image uses native scroll-driven camera movement, perspective, zoom and SVG light paths.
+The site exports static HTML and assets. Its supplied background image uses native scroll-driven camera movement, perspective, zoom and SVG light paths. Motion starts automatically on every route, with adaptive desktop scene holds that keep long content reachable on shorter windows.
+
+A single on-demand animation frame controller handles scroll and pointer input. Background velocity settles after scrolling stops; ambient CSS animation pauses on offscreen surfaces and hidden tabs. Reduced motion removes ambient animation, pointer tilt and trailing interpolation while keeping a gentler, directly controlled background scroll. Content remains visible without JavaScript.
 
 Live site: [pirimov-portfolio.vercel.app](https://pirimov-portfolio.vercel.app) · [Uzbek](https://pirimov-portfolio.vercel.app/uz/)
 
@@ -29,10 +31,11 @@ The production build creates the deployable static site in `out/`. No runtime ap
 
 ## Content and images
 
-- Edit `src/data/portfolio.ts` for profile details, navigation, skills, services, projects, contacts and English/Uzbek translations.
+- Edit `src/data/portfolio.ts` for profile details, navigation, skills, services, projects, recognition, contacts and English/Uzbek translations.
 - Keep the portrait in `public/images/profile/`.
 - Add project screenshots under `public/images/projects/` and reference them from the project data with dimensions and localized alt text.
 - The supplied desktop and mobile background images live in `public/images/backgrounds/`.
+- Recognition entries accept an optional image and certificate link. Add these only after confirming the recipient and achievement; the layout also supports text-only entries.
 
 ## Routes
 

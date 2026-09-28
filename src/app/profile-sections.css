@@ -209,3 +209,19 @@
     transition: none;
   }
 }
+/* Recognition stays an editorial record even before certificate art is supplied. */
+.recognition-section { background: var(--paper); }
+.recognition-entry { display: grid; grid-template-columns: 1fr 1fr; gap: 40px 80px; border-top: 2px solid var(--ink); padding-block: 38px; }
+.recognition-identity > svg { margin-bottom: 24px; }
+.recognition-identity > .eyebrow { color: var(--muted); margin-bottom: 14px; }
+.recognition-identity h3 { font-size: clamp(32px,3.6vw,52px); line-height: 1.12; max-width: 560px; text-wrap: balance; }
+.recognition-story { align-self: end; max-width: 620px; }
+.recognition-story > p { color: var(--muted); }
+.recognition-links { display: flex; flex-wrap: wrap; gap: 16px 28px; margin-top: 22px; }
+.recognition-evidence { grid-column: 1 / -1; width: min(100%,900px); margin-inline: auto; }
+.recognition-evidence .portfolio-image__asset { object-fit: contain; }
+.recognition-evidence figcaption { margin-top: 16px; color: var(--muted); font-size: 16px; }
+@media (max-width: 800px) {
+  .recognition-entry { grid-template-columns: minmax(0,1fr); gap: 24px; padding-block: 28px; }
+  .recognition-identity > svg { width: 44px; height: 44px; margin-bottom: 18px; }
+}

@@ -41,6 +41,10 @@ export function MotionBackdrop({ priority = false }: { priority?: boolean }) {
           </svg>
         </div>
         <div className="motion-backdrop__atmosphere" />
+        <svg className="motion-backdrop__particles" viewBox="0 0 1200 800" fill="currentColor" focusable="false">
+          <g><circle cx="160" cy="160" r="2" /><circle cx="970" cy="310" r="2.5" /><circle cx="720" cy="650" r="1.5" /></g>
+          <g><circle cx="360" cy="590" r="1.5" /><circle cx="850" cy="110" r="2" /><circle cx="1120" cy="560" r="2" /></g>
+        </svg>
         <div className="motion-backdrop__shade" />
       </div>
     </div>
