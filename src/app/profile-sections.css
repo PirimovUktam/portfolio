@@ -218,10 +218,14 @@
 .recognition-story { align-self: end; max-width: 620px; }
 .recognition-story > p { color: var(--muted); }
 .recognition-links { display: flex; flex-wrap: wrap; gap: 16px 28px; margin-top: 22px; }
-.recognition-evidence { grid-column: 1 / -1; width: min(100%,900px); margin-inline: auto; }
+.recognition-entry:has(.recognition-evidence) { grid-template-columns: 1fr .8fr; gap: 24px 80px; }
+.recognition-entry:has(.recognition-evidence) .recognition-identity { align-self: end; }
+.recognition-entry:has(.recognition-evidence) .recognition-story { grid-column: 1; align-self: start; }
+.recognition-evidence { grid-column: 2; grid-row: 1 / span 2; width: min(100%,520px); margin-inline: auto; }
 .recognition-evidence .portfolio-image__asset { object-fit: contain; }
 .recognition-evidence figcaption { margin-top: 16px; color: var(--muted); font-size: 16px; }
 @media (max-width: 800px) {
-  .recognition-entry { grid-template-columns: minmax(0,1fr); gap: 24px; padding-block: 28px; }
+  .recognition-entry,.recognition-entry:has(.recognition-evidence) { grid-template-columns: minmax(0,1fr); gap: 24px; padding-block: 28px; }
+  .recognition-evidence { grid-column: 1; grid-row: auto; }
   .recognition-identity > svg { width: 44px; height: 44px; margin-bottom: 18px; }
 }

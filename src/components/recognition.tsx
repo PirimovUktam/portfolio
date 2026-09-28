@@ -29,7 +29,7 @@ export function Recognition({ locale }: { locale: Locale }) {
                   {item.evidenceUrl && <a className="text-link" href={item.evidenceUrl}>{portfolio.ui.viewCertificate[locale]}<ArrowUpRight size={22} aria-hidden="true" /></a>}
                 </div>
               </div>
-              {item.image && <figure className="recognition-evidence"><PortfolioImage image={item.image} locale={locale} unavailableLabel={portfolio.ui.imageUnavailable[locale]} sizes="(max-width: 800px) 100vw, 900px" /><figcaption>{item.image.alt[locale]}</figcaption></figure>}
+              {item.image && <figure className="recognition-evidence"><PortfolioImage image={item.image} locale={locale} unavailableLabel={portfolio.ui.imageUnavailable[locale]} sizes="(max-width: 600px) calc(100vw - 36px), (max-width: 800px) 520px, 40vw" /><figcaption>{item.image.alt[locale]}</figcaption></figure>}
             </article>
           ))}
         </div>

@@ -474,6 +474,16 @@ export const portfolio: Portfolio = {
         uz: "BilimYo‘l Smart Edu moslashuvchan ta’lim MVP’si bilan Qarshi bosqichida qatnashdim. Mening hissam — mahsulot konsepsiyasi, arxitektura, MVP ishlab chiqish va AI integratsiyasi.",
       },
       projectSlug: "bilimyol-smart-edu",
+      image: {
+        src: "/images/recognition/oktam-pirimov-national-ai-hackathon-qarshi.webp",
+        alt: {
+          en: "National AI Hackathon: Qarshi participation certificate issued to Pirimov Uktam, 15–18 August 2026.",
+          uz: "Pirimov Uktam nomiga berilgan Milliy AI xakatoni: Qarshi bosqichida ishtirok etganlik sertifikati, 2026-yil 15–18-avgust.",
+        },
+        width: 1191,
+        height: 1684,
+      },
+      evidenceUrl: "/images/recognition/oktam-pirimov-national-ai-hackathon-qarshi.pdf",
     },
   ],
   projects: [
@@ -491,8 +501,8 @@ export const portfolio: Portfolio = {
         uz: "Bilim bo‘shliqlarini aniqlab, o‘quvchini shaxsiy yo‘l xaritasi, interaktiv darslar va maqsadli mashqlar orqali yo‘naltiradigan moslashuvchan ta’lim MVP’si.",
       },
       description: {
-        en: "BilimYo‘l Smart Edu helps learners understand their strengths and knowledge gaps in mathematics and English. Placement assessments inform a knowledge map and an adaptive learning path with lessons and reinforcement exercises. The project combines React web and Flutter mobile applications with Supabase authentication and learner data. The web application also includes parent, teacher and admin dashboards, plus Gemini integrations for tutor feedback and lesson generation.",
-        uz: "BilimYo‘l Smart Edu o‘quvchiga matematika va ingliz tili bo‘yicha kuchli tomonlari hamda bilim bo‘shliqlarini aniqlashga yordam beradi. Diagnostik test natijalari asosida bilim xaritasi, darslar va mustahkamlash mashqlaridan iborat moslashuvchan o‘quv yo‘li shakllanadi. Loyiha React veb va Flutter mobil ilovalarini Supabase autentifikatsiyasi hamda o‘quvchi ma’lumotlari bilan birlashtiradi. Veb ilovada ota-ona, o‘qituvchi va administrator panellari, shuningdek, xatolarni tushuntirish va dars yaratish uchun Gemini integratsiyasi mavjud.",
+        en: "BilimYo‘l Smart Edu helps learners understand their strengths and knowledge gaps in mathematics and English. Placement assessments inform a knowledge map and an adaptive learning path with lessons and reinforcement exercises. The project combines React web and Flutter mobile applications with Supabase authentication and learner data. The web application includes parent, teacher and admin dashboards. Its Yo‘lchi AI tutor uses Gemini through a Supabase Edge Function for mistake feedback and lesson generation.",
+        uz: "BilimYo‘l Smart Edu o‘quvchiga matematika va ingliz tili bo‘yicha kuchli tomonlari hamda bilim bo‘shliqlarini aniqlashga yordam beradi. Diagnostik test natijalari asosida bilim xaritasi, darslar va mustahkamlash mashqlaridan iborat moslashuvchan o‘quv yo‘li shakllanadi. Loyiha React veb va Flutter mobil ilovalarini Supabase autentifikatsiyasi hamda o‘quvchi ma’lumotlari bilan birlashtiradi. Veb ilovada ota-ona, o‘qituvchi va administrator panellari mavjud. Yo‘lchi AI yordamchisi xatolarni tushuntirish va dars yaratish uchun Gemini’ga Supabase Edge Function orqali murojaat qiladi.",
       },
       contributions: [
         { en: "Product concept", uz: "Mahsulot konsepsiyasi" },
