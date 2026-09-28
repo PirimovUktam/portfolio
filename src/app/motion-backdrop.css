@@ -1,185 +1,38 @@
-/* The photo stays inside its own clipping layer; section sticky flow is intact. */
-[data-motion-surface] { position: relative; isolation: isolate; }
+/* One fixed environment: all chapters share its camera, geometry and light. */
+#top { position: relative; isolation: isolate; }
+[data-motion-surface] { position: relative; }
 .hero-stage,.project-stage { isolation: isolate; }
-
-.motion-backdrop {
-  --cinema-progress: .35;
-  --cinema-pan-x: min(64px,6cqw);
-  --cinema-pan-y: -32px;
-  --cinema-tilt: .6deg;
-  --cinema-zoom-start: 1.07;
-  --cinema-zoom-travel: .13;
-  --cinema-anchor-x: 0px;
-  --cinema-shade-left: rgb(244 242 233 / .97);
-  --cinema-shade-middle: rgb(244 242 233 / .94);
-  --cinema-shade-right: rgb(244 242 233 / .88);
-  --cinema-edge-shade: rgb(244 242 233 / .28);
-  --cinema-atmosphere: .55;
-  --cinema-velocity-travel: 8px;
-  --cinema-velocity: 0;
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  overflow: clip;
-  pointer-events: none;
-  user-select: none;
-}
-.motion-backdrop__frame {
-  position: sticky;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  max-height: 100dvh;
-  overflow: clip;
-  container-type: size;
-}
-.motion-backdrop__camera {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: max(100cqw,calc(100cqh * var(--backdrop-ratio,1.7768)));
-  height: max(100cqh,calc(100cqw / var(--backdrop-ratio,1.7768)));
-  transform-origin: center;
-  transform: translate(-50%,-50%)
-    translate3d(calc(var(--cinema-anchor-x) + (var(--cinema-progress) - .5) * var(--cinema-pan-x)),calc((var(--cinema-progress) - .5) * var(--cinema-pan-y) + var(--cinema-velocity) * var(--cinema-progress) * (1 - var(--cinema-progress)) * 4 * var(--cinema-velocity-travel)),0)
-    rotate(calc((var(--cinema-progress) - .5) * var(--cinema-tilt)))
-    scale(calc(var(--cinema-zoom-start) + var(--cinema-progress) * var(--cinema-zoom-travel)));
-}
-.motion-backdrop__camera > picture { position: absolute; inset: 0; display: block; }
-.motion-backdrop__image {
-  display: block;
-  width: 100%;
-  height: 100%;
-  max-width: none;
-  object-fit: cover;
-  object-position: center;
-  filter: saturate(.82) brightness(.84);
-}
-.motion-backdrop__light-path {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  max-width: none;
-  overflow: visible;
-}
-.motion-backdrop__light-trace {
-  fill: none;
-  stroke: #c1dcff;
-  stroke-width: 2.2px;
-  stroke-linecap: round;
-  stroke-dasharray: 120 880;
-  stroke-dashoffset: calc(80 - var(--cinema-progress) * 1000);
-  vector-effect: non-scaling-stroke;
-  opacity: .85;
-}
-.motion-backdrop__atmosphere {
-  position: absolute;
-  inset: -10%;
-  background:
-    radial-gradient(ellipse at 83% 55%,rgb(245 174 111 / .16),transparent 44%),
-    linear-gradient(116deg,transparent 30%,rgb(146 185 232 / .1) 53%,transparent 73%);
-  opacity: var(--cinema-atmosphere);
-}
-.motion-backdrop__particles {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  color: #e3e8cd;
-  opacity: .6;
-  transform: translate3d(0,calc((var(--cinema-progress) - .5) * -54px),0);
-}
-/* Only visible desktop scenes breathe. No background JavaScript render loop. */
-.motion-enabled .motion-backdrop__atmosphere {
-  animation: atmosphere-drift 18s ease-in-out infinite alternate;
-  animation-play-state: paused;
-}
-.motion-enabled .motion-backdrop__particles > g {
-  animation: particle-drift 14s ease-in-out infinite alternate;
-  animation-play-state: paused;
-}
-.motion-enabled .motion-backdrop__particles > g + g { animation-delay: -7s; animation-direction: alternate-reverse; }
-[data-motion-visible="true"] > .motion-backdrop,
-[data-motion-visible="true"] > [data-scroll-sticky] > .motion-backdrop { --cinema-velocity: var(--scroll-velocity,0); }
-[data-motion-visible="true"] > .motion-backdrop .motion-backdrop__atmosphere,
-[data-motion-visible="true"] > [data-scroll-sticky] > .motion-backdrop .motion-backdrop__atmosphere,
-[data-motion-visible="true"] > .motion-backdrop .motion-backdrop__particles > g,
-[data-motion-visible="true"] > [data-scroll-sticky] > .motion-backdrop .motion-backdrop__particles > g {
-  animation-play-state: var(--ambient-play-state,paused);
-}
-@keyframes atmosphere-drift {
-  from { translate: -1% 0; }
-  to { translate: 2% -1.5%; }
-}
-@keyframes particle-drift {
-  from { transform: translate(0,8px); opacity: .35; }
-  to { transform: translate(12px,-16px); opacity: .85; }
-}
-.motion-backdrop__shade {
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(180deg,var(--cinema-edge-shade),transparent 28%,transparent 72%,var(--cinema-edge-shade)),
-    linear-gradient(90deg,var(--cinema-shade-left),var(--cinema-shade-middle) 46%,var(--cinema-shade-right));
-}
-
-/* Tone belongs to the host, so nested project chapters keep their own palette. */
-.hero-scene > .hero-stage > .motion-backdrop,
-.work-section > .motion-backdrop,
-.profile-services > .motion-backdrop,
-.project-scene[data-project-surface="2"] > .project-stage > .motion-backdrop {
-  --cinema-shade-left: rgb(16 19 16 / .86);
-  --cinema-shade-middle: rgb(16 19 16 / .78);
-  --cinema-shade-right: rgb(16 19 16 / .7);
-  --cinema-edge-shade: rgb(16 19 16 / .38);
-  --cinema-atmosphere: .8;
-}
-.hero-scene > .hero-stage > .motion-backdrop {
-  --cinema-shade-middle: rgb(16 19 16 / .74);
-  --cinema-shade-right: rgb(16 19 16 / .5);
-}
-.project-scene[data-project-surface="0"] > .project-stage > .motion-backdrop,
-.contact-section > .motion-backdrop {
-  --cinema-shade-left: rgb(209 255 91 / .97);
-  --cinema-shade-middle: rgb(209 255 91 / .95);
-  --cinema-shade-right: rgb(209 255 91 / .9);
-  --cinema-edge-shade: rgb(209 255 91 / .28);
-}
-
-.motion-enabled .motion-backdrop { --cinema-progress: var(--surface-progress,.35); }
-.motion-backdrop__atmosphere {
-  transform: translate3d(calc((var(--cinema-progress) - .5) * -38px),calc((var(--cinema-progress) - .5) * 22px),0)
-    scale(calc(1.03 + var(--cinema-progress) * .07));
-}
-
+.cinematic-backdrop { position: fixed; inset: 0; z-index: -1; overflow: clip; pointer-events: none; user-select: none; background: #080d19; }
+.cinematic-poster { position: absolute; inset: -4%; display: block; opacity: .3; transform: scale(1.04); }
+.cinematic-poster img { object-fit: cover; object-position: center; filter: saturate(.6); }
+.cinematic-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.cinematic-light { position: absolute; inset: -12%; background: radial-gradient(ellipse at 76% 45%,#3a568932,transparent 50%),radial-gradient(ellipse at 35% 90%,#4b39642b,transparent 50%); }
+.cinematic-shade { position: absolute; inset: 0; background: linear-gradient(90deg,#080d196b,transparent 56%),linear-gradient(0deg,#080d1966,transparent 25%,transparent 80%,#080d1944); }
+.motion-enabled .cinematic-poster { opacity: calc(.3 - var(--hero-progress,0) * .14); transform: translate3d(calc(var(--hero-progress,0) * -24px),calc(var(--hero-progress,0) * -32px),0) scale(calc(1.04 + var(--hero-progress,0) * .16)); }
+.motion-enabled .cinematic-backdrop:has([data-ready="true"]) .cinematic-poster { opacity: calc(.3 * (1 - var(--hero-progress,0))); }
+.motion-enabled .cinematic-light { transform: translate3d(calc(var(--story-progress,0) * -12%),calc(var(--story-progress,0) * -8%),0) rotate(calc(var(--story-progress,0) * 24deg)); }
+/* Project diagrams carry real content; the shared scene provides their depth. */
+.project-art__sweep { opacity: .3; }
+.project-art__diagram { background: #080d19a6; }
+.project-art__hero { filter: drop-shadow(0 12px 24px #0005); }
+.project-copy,.hero-content { text-shadow: 0 2px 24px #080d1966; }
 @media (max-width: 800px) {
-  .motion-backdrop {
-    --cinema-velocity-travel: 3px;
-    --cinema-pan-x: 26px;
-    --cinema-pan-y: -18px;
-    --cinema-tilt: .36deg;
-    --cinema-zoom-start: 1.1;
-    --cinema-zoom-travel: .1;
-    --cinema-anchor-x: clamp(0px,calc((100cqh * var(--backdrop-ratio,1.7768) - 100cqw) * .2),16cqh);
-  }
-  .hero-scene > .hero-stage > .motion-backdrop {
-    --cinema-shade-left: rgb(16 19 16 / .84);
-    --cinema-shade-middle: rgb(16 19 16 / .78);
-    --cinema-shade-right: rgb(16 19 16 / .66);
-  }
-  .motion-backdrop__light-trace { stroke-width: 1.6px; }
-  /* One moving photo layer avoids extra full-screen textures on phone GPUs. */
-  .motion-backdrop__image { filter: none; }
-  .motion-backdrop__light-path,.motion-backdrop__atmosphere,.motion-backdrop__particles { display: none; }
-  .motion-backdrop__atmosphere {
-    transform: translate3d(calc((var(--cinema-progress) - .5) * -16px),calc((var(--cinema-progress) - .5) * 12px),0)
-      scale(calc(1.03 + var(--cinema-progress) * .04));
-  }
+  .cinematic-poster img { object-position: 62% center; filter: none; }
+  .cinematic-poster { opacity: .28; }
+  .cinematic-shade { background: #080d1933; }
+  .motion-enabled .cinematic-poster { opacity: calc(.28 - var(--hero-progress,0) * .12); transform: translateY(calc(var(--hero-progress,0) * -12px)) scale(1.04); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .motion-backdrop { --cinema-velocity-travel: 0px; --cinema-pan-x: 12px; --cinema-pan-y: -8px; --cinema-tilt: 0deg; --cinema-zoom-travel: .03; }
-  .motion-backdrop__particles { display: none; }
-  #top:not([data-motion="on"]) .motion-backdrop { --cinema-progress: .35; }
+  /* Keep direct, modest scroll feedback; remove inertia and large 3D movement. */
+  #top.motion-enabled .hero-portrait { transform: translateY(calc(var(--scene-progress,0) * -8px)) rotate(-2deg); }
+  #top.motion-enabled .portrait-depth { transform: rotate(3deg); }
+  #top.motion-enabled .hero-symbol { transform: none; }
+  #top.motion-enabled .hero-word { transform: translateY(calc(var(--scene-progress,0) * -6px)); }
+  #top.motion-enabled [data-reveal] { transform: translateY(calc((1 - var(--reveal-enter,1)) * 8px)); }
+  #top.motion-enabled .project-art__sweep { transform: none; }
+  #top.motion-enabled .project-art__hero { transform: translateY(calc(var(--scene-progress,0) * -8px)); }
+  #top.motion-enabled .project-art__diagram,#top.motion-enabled .project-copy { transform: none; }
+  .motion-enabled .cinematic-poster { transform: scale(1.04); }
+  .motion-enabled .cinematic-light { transform: translateX(calc(var(--story-progress,0) * -2%)); }
 }
-@media print { .motion-backdrop { display: none; } }
+@media print { .cinematic-backdrop { display: none; } }

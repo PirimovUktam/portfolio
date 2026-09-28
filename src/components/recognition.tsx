@@ -2,7 +2,6 @@ import Link from "next/link";
 import { ArrowUpRight, Award } from "lucide-react";
 import { portfolio, type Locale } from "@/data/portfolio";
 import { projectPath } from "@/lib/routes";
-import { MotionBackdrop } from "./motion-backdrop";
 import { PortfolioImage } from "./portfolio-image";
 import { SectionHeading } from "./section-heading";
 
@@ -11,7 +10,7 @@ export function Recognition({ locale }: { locale: Locale }) {
 
   return (
     <section id="recognition" className="section recognition-section" aria-labelledby="recognition-heading" data-scroll-section data-motion-surface>
-      <MotionBackdrop />
+
       <div className="container">
         <SectionHeading section="recognition" number="02" locale={locale} />
         <div className="recognition-list">

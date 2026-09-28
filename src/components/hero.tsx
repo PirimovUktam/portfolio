@@ -3,14 +3,13 @@ import { ArrowDown, ArrowUpRight, Asterisk, MapPin } from "lucide-react";
 import { portfolio, type Locale } from "@/data/portfolio";
 import { PortfolioImage } from "./portfolio-image";
 import { ContentIcon } from "./content-icon";
-import { MotionBackdrop } from "./motion-backdrop";
 
 export function Hero({ locale }: { locale: Locale }) {
   const { profile, hero } = portfolio;
   return (
     <section className="hero-scene" data-scroll-scene data-motion-surface aria-labelledby="hero-heading">
       <div className="hero-stage" data-scroll-sticky>
-        <MotionBackdrop priority />
+
         <div className="container hero">
           <div className="hero-topline">
             <p className="hero-name"><span className="status-mark" aria-hidden="true" />{profile.name}</p>

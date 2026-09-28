@@ -1,7 +1,6 @@
 import { ArrowUpRight } from "lucide-react";
 import { portfolio, type Locale } from "@/data/portfolio";
 import { ContentIcon } from "./content-icon";
-import { MotionBackdrop } from "./motion-backdrop";
 
 function ProfileHeading({
   section,
@@ -37,7 +36,7 @@ export function ProfileSections({ locale }: { locale: Locale }) {
         data-motion-surface
         aria-labelledby="about-heading"
       >
-        <MotionBackdrop />
+
         <div className="container profile-about-grid">
           <header className="profile-about-heading" data-reveal>
             <p className="profile-kicker">
@@ -71,7 +70,7 @@ export function ProfileSections({ locale }: { locale: Locale }) {
         data-motion-surface
         aria-labelledby="expertise-heading"
       >
-        <MotionBackdrop />
+
         <div className="container profile-expertise-layout">
           <ProfileHeading section="expertise" number={sectionNumber(3)} locale={locale} />
           <div className="profile-skills-list">
@@ -101,7 +100,7 @@ export function ProfileSections({ locale }: { locale: Locale }) {
         data-motion-surface
         aria-labelledby="services-heading"
       >
-        <MotionBackdrop />
+
         <div className="container">
           <ProfileHeading section="services" number={sectionNumber(4)} locale={locale} />
           <ol className="profile-service-catalog">
@@ -134,7 +133,7 @@ export function ProfileSections({ locale }: { locale: Locale }) {
         data-motion-surface
         aria-labelledby="journey-heading"
       >
-        <MotionBackdrop />
+
         <div className="container">
           <ProfileHeading section="journey" number={sectionNumber(5)} locale={locale} />
           <div className="profile-journey-track">

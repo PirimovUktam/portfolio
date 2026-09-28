@@ -54,19 +54,20 @@ export function buildPageMetadata(locale: Locale, project?: Project): Metadata {
   const englishRoute = project ? projectPath("en", project.slug) : homePath("en");
   const uzbekRoute = project ? projectPath("uz", project.slug) : homePath("uz");
   const url = siteUrl ? productionPageUrl(route, siteUrl) : undefined;
+  const socialImage = project?.image ?? portfolio.site.socialImage ?? portfolio.profile.image;
   const images = siteUrl
     ? [{
-        url: new URL(portfolio.profile.image.src, siteUrl).href,
-        width: portfolio.profile.image.width,
-        height: portfolio.profile.image.height,
-        alt: portfolio.profile.image.alt[locale],
+        url: new URL(socialImage.src, siteUrl).href,
+        width: socialImage.width,
+        height: socialImage.height,
+        alt: socialImage.alt[locale],
       }]
     : undefined;
 
   return {
     title,
     description,
-    icons: { icon: "/favicon.svg" },
+    icons: { icon: { url: "/favicon.svg", type: "image/svg+xml", sizes: "any" } },
     ...(siteUrl ? {
       metadataBase: siteUrl,
       alternates: {
@@ -89,7 +90,7 @@ export function buildPageMetadata(locale: Locale, project?: Project): Metadata {
       ...(images ? { images } : {}),
     },
     twitter: {
-      card: "summary_large_image",
+      card: socialImage.width / socialImage.height >= 1.5 ? "summary_large_image" : "summary",
       title,
       description,
       ...(images ? { images } : {}),

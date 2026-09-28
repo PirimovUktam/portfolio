@@ -30,6 +30,38 @@ export interface PortfolioImage {
   height: number;
 }
 
+export interface CaseStudyPoint {
+  title: LocalizedText;
+  description: LocalizedText;
+}
+
+export interface ProjectCaseStudy {
+  audience: LocalizedText;
+  problem: CaseStudyPoint;
+  solution: CaseStudyPoint;
+  roleSummary: LocalizedText;
+  architecture: {
+    title: LocalizedText;
+    description: LocalizedText;
+    clients: CaseStudyPoint[];
+    platform: CaseStudyPoint;
+    services: CaseStudyPoint[];
+    principle: CaseStudyPoint;
+  };
+  learningLoop: {
+    title: LocalizedText;
+    description: LocalizedText;
+    phases: {
+      title: LocalizedText;
+      steps: LocalizedText[];
+      description: LocalizedText;
+    }[];
+    note: LocalizedText;
+  };
+  status: CaseStudyPoint;
+  nextStep: LocalizedText;
+}
+
 export interface Project {
   slug: string;
   title: string;
@@ -45,6 +77,7 @@ export interface Project {
   githubUrl?: string;
   image?: PortfolioImage;
   screenshots?: PortfolioImage[];
+  caseStudy?: ProjectCaseStudy;
   visual: {
     kind: "editorial" | "flow";
     wordmark: string;
@@ -74,6 +107,7 @@ export interface Portfolio {
     title: LocalizedText;
     description: LocalizedText;
     url?: string;
+    socialImage?: PortfolioImage;
   };
   background: {
     desktop: PortfolioImage;
@@ -118,6 +152,13 @@ export interface Portfolio {
     focus: LocalizedText;
     emailAction: LocalizedText;
     viewCertificate: LocalizedText;
+    problem: LocalizedText;
+    solution: LocalizedText;
+    audience: LocalizedText;
+    architecture: LocalizedText;
+    howItWorks: LocalizedText;
+    currentStatus: LocalizedText;
+    nextStep: LocalizedText;
     notFound: {
       title: LocalizedText;
       description: LocalizedText;
@@ -148,7 +189,7 @@ export interface Portfolio {
 
 const notFound = {
   title: {
-    en: "This page is off the map.",
+    en: "Page not found.",
     uz: "Bu sahifa topilmadi.",
   },
   description: {
@@ -161,14 +202,23 @@ const notFound = {
 export const portfolio: Portfolio = {
   site: {
     title: {
-      en: "Pirimov O'ktam — Mobile, Web & AI",
-      uz: "Pirimov O'ktam — Mobil, Veb va AI",
+      en: "Pirimov O‘ktam — Mobile, Full-Stack & AI",
+      uz: "Pirimov O‘ktam — Mobil, Full-Stack va AI",
     },
     description: {
-      en: "Pirimov O'ktam is a Mobile & Full-Stack Developer and AI Engineer in Qarshi, Uzbekistan, building practical digital products with Flutter, web technologies and AI.",
-      uz: "Pirimov O'ktam — Qarshidagi mobil va Full-Stack dasturchi, AI muhandisi. Flutter, veb texnologiyalar va AI yordamida amaliy raqamli mahsulotlar yarataman.",
+      en: "Mobile Developer, Full-Stack Developer and AI Engineer in Qarshi, Uzbekistan. Explore Pirimov O‘ktam’s mobile, web and AI projects.",
+      uz: "Qarshilik mobil va Full-Stack dasturchi, AI muhandisi Pirimov O‘ktamning mobil, veb va sun’iy intellekt loyihalari bilan tanishing.",
     },
-    // Add your real production URL here when a domain is connected.
+    url: "https://pirimov-portfolio.vercel.app",
+    socialImage: {
+      src: "/images/social/portfolio-share.jpg",
+      width: 1200,
+      height: 630,
+      alt: {
+        en: "Pirimov O‘ktam’s portrait beside his name and Flutter, React and AI specialties.",
+        uz: "Pirimov O‘ktam portreti, ismi hamda Flutter, React va AI yo‘nalishlari.",
+      },
+    },
   },
   background: {
     desktop: {
@@ -191,24 +241,24 @@ export const portfolio: Portfolio = {
     },
   },
   profile: {
-    name: "Pirimov O'ktam",
+    name: "Pirimov O‘ktam",
     role: {
       en: "Mobile & Full-Stack Developer | AI Engineer",
       uz: "Mobil va Full-Stack dasturchi | AI muhandisi",
     },
     bio: {
-      en: "I build modern digital products that solve real problems using Flutter, full-stack development and AI. My focus is on clean architecture, thoughtful user experience, and mobile and web products with practical value.",
-      uz: "Men Flutter, Full-Stack development va AI texnologiyalari yordamida real muammolarni hal qiladigan zamonaviy raqamli mahsulotlar yarataman. Asosiy e’tiborim — clean architecture, yaxshi user experience va amaliy qiymatga ega mobil va veb mahsulotlar yaratish.",
+      en: "I build mobile apps, full-stack products and AI-powered solutions. My work spans product decisions, architecture, development, integration and deployment, with a focus on clear interfaces and maintainable code.",
+      uz: "Mobil ilovalar, Full-Stack mahsulotlar va AI yechimlarini yarataman. G‘oyani aniqlashtirishdan arxitektura, dasturlash, integratsiya va ishga tushirishgacha bo‘lgan jarayon ustida ishlayman. Qulay interfeys va rivojlantirish oson bo‘lgan kodga e’tibor beraman.",
     },
     shortBio: {
-      en: "Practical digital products. Clear experiences. Purposeful code.",
-      uz: "Amaliy raqamli mahsulotlar. Qulay tajriba. Maqsadli kod.",
+      en: "From a product idea to a working mobile, web or AI solution.",
+      uz: "Mahsulot g‘oyasidan ishlaydigan mobil, veb yoki AI yechimigacha.",
     },
     location: { en: "Qarshi, Uzbekistan", uz: "Qarshi, O‘zbekiston" },
     image: {
       src: "/images/profile/oktam-pirimov.webp",
       alt: {
-        en: "Portrait of Pirimov O'ktam",
+        en: "Portrait of Pirimov O‘ktam",
         uz: "Pirimov O‘ktam portreti",
       },
       width: 1000,
@@ -227,8 +277,8 @@ export const portfolio: Portfolio = {
       { label: { en: "Applied AI", uz: "Amaliy AI" }, icon: "brain" },
     ],
     intro: {
-      en: "Flutter apps and web products, built with clean architecture.",
-      uz: "Flutter va veb mahsulotlar — puxta arxitektura asosida.",
+      en: "I build mobile apps, full-stack products and AI-powered solutions.",
+      uz: "Mobil ilovalar, Full-Stack mahsulotlar va AI yechimlarini yarataman.",
     },
     primaryAction: { en: "Explore my work", uz: "Loyihalarimni ko‘rish" },
     secondaryAction: { en: "Get in touch", uz: "Bog‘lanish" },
@@ -251,7 +301,7 @@ export const portfolio: Portfolio = {
     languageLabel: { en: "Choose language", uz: "Tilni tanlash" },
     imageUnavailable: { en: "Image unavailable", uz: "Rasm mavjud emas" },
     caseStudy: { en: "View project", uz: "Loyihani ko‘rish" },
-    liveDemo: { en: "Live demo", uz: "Jonli demo" },
+    liveDemo: { en: "Open demo", uz: "Demoni ochish" },
     sourceCode: { en: "Source code", uz: "Manba kodi" },
     backToProjects: { en: "Back to projects", uz: "Loyihalarga qaytish" },
     projectOverview: { en: "Project overview", uz: "Loyiha haqida" },
@@ -265,6 +315,13 @@ export const portfolio: Portfolio = {
     focus: { en: "Focus", uz: "Yo‘nalish" },
     emailAction: { en: "Start a conversation", uz: "Suhbat boshlash" },
     viewCertificate: { en: "View certificate", uz: "Sertifikatni ko‘rish" },
+    problem: { en: "The problem", uz: "Muammo" },
+    solution: { en: "The solution", uz: "Yechim" },
+    audience: { en: "Designed for", uz: "Kim uchun" },
+    architecture: { en: "Technology & architecture", uz: "Texnologiya va arxitektura" },
+    howItWorks: { en: "How it works", uz: "Qanday ishlaydi" },
+    currentStatus: { en: "Current status", uz: "Hozirgi holat" },
+    nextStep: { en: "Next development priority", uz: "Keyingi asosiy vazifa" },
     notFound,
   },
   sections: {
@@ -272,16 +329,16 @@ export const portfolio: Portfolio = {
       eyebrow: { en: "Selected work", uz: "Tanlangan loyihalar" },
       heading: { en: "Ideas into products.", uz: "G‘oyadan mahsulotgacha." },
       intro: {
-        en: "Adaptive learning, legal guidance, mobile commerce and a practical location finder. Different problems, a shared focus on useful experiences.",
-        uz: "Moslashuvchan ta’lim, huquqiy yordam, mobil savdo va dorixona manzilini izlash. Turli muammolar, yagona maqsad — foydali va qulay tajriba.",
+        en: "Selected projects across personalized education, legal guidance, mobile commerce and business automation.",
+        uz: "Shaxsiylashtirilgan ta’lim, huquqiy yordam, mobil savdo va biznes jarayonlarini avtomatlashtirish bo‘yicha loyihalar.",
       },
     },
     recognition: {
       eyebrow: { en: "Recognition", uz: "E’tirof" },
       heading: { en: "Hackathon experience.", uz: "Xakaton tajribasi." },
       intro: {
-        en: "Taking an adaptive learning MVP from product concept to the National AI Hackathon’s Qarshi stage.",
-        uz: "Moslashuvchan ta’lim MVP’sini mahsulot konsepsiyasidan Milliy AI xakatonining Qarshi bosqichigacha olib chiqish.",
+        en: "I presented BilimYo‘l Smart Edu at the National AI Hackathon’s Qarshi stage, held on 15–18 August 2026.",
+        uz: "BilimYo‘l Smart Edu bilan 2026-yil 15–18-avgust kunlari Milliy AI xakatonining Qarshi bosqichida qatnashdim.",
       },
     },
     about: {
@@ -382,7 +439,7 @@ export const portfolio: Portfolio = {
         { en: "AI application development", uz: "AI ilovalar yaratish" },
         { en: "AI integration", uz: "AI integratsiyasi" },
         { en: "LLM-based applications", uz: "LLM asosidagi ilovalar" },
-        { en: "Prompt Engineering", uz: "Promptlarni ishlab chiqish" },
+        { en: "Prompt engineering", uz: "Promptlarni ishlab chiqish" },
         {
           en: "AI-assisted software development",
           uz: "AI yordamida dasturiy ta’minot yaratish",
@@ -410,7 +467,7 @@ export const portfolio: Portfolio = {
       icon: "smartphone",
       description: {
         en: "Cross-platform Android and iOS applications with Flutter, built around a clear interface and maintainable architecture.",
-        uz: "Flutter yordamida Android va iOS uchun qulay interfeys hamda tushunarli arxitekturaga ega cross-platform ilovalar yaratish.",
+        uz: "Flutter yordamida Android va iOS uchun bitta kod bazasiga, qulay interfeys va tushunarli arxitekturaga ega ilovalar yaratish.",
       },
     },
     {
@@ -455,12 +512,12 @@ export const portfolio: Portfolio = {
       label: { en: "Education", uz: "Ta’lim" },
       icon: "graduation",
       title: {
-        en: "Bachelor’s Degree · Computer Engineer",
-        uz: "Bakalavr · Kompyuter muhandisi",
+        en: "Bachelor’s degree · Information Systems and Technologies",
+        uz: "Bakalavr · Axborot tizimlari va texnologiyalari",
       },
       description: {
-        en: "Bachelor’s education in Information Systems and Technologies, with a Computer Engineer specialty.",
-        uz: "Axborot tizimlari va texnologiyalari yo‘nalishi bo‘yicha bakalavr ta’limi. Mutaxassislik — Kompyuter muhandisi.",
+        en: "Specialization in Computer Engineering.",
+        uz: "Mutaxassislik: kompyuter muhandisi.",
       },
     },
   ],
@@ -470,8 +527,8 @@ export const portfolio: Portfolio = {
       title: { en: "National AI Hackathon", uz: "Milliy AI xakatoni" },
       distinction: { en: "Qarshi stage · Finalist", uz: "Qarshi bosqichi · Finalchi" },
       description: {
-        en: "Participated in the Qarshi stage with BilimYo‘l Smart Edu, an adaptive learning MVP. My work covered the product concept, architecture, MVP development and AI integration.",
-        uz: "BilimYo‘l Smart Edu moslashuvchan ta’lim MVP’si bilan Qarshi bosqichida qatnashdim. Mening hissam — mahsulot konsepsiyasi, arxitektura, MVP ishlab chiqish va AI integratsiyasi.",
+        en: "Reached the final in Qarshi with BilimYo‘l Smart Edu. My contribution covered the product concept, architecture, MVP development and AI integration. Participation certificate available.",
+        uz: "BilimYo‘l Smart Edu bilan Qarshidagi final bosqichigacha bordim. Mahsulot konsepsiyasi, arxitektura, MVP yaratish va AI integratsiyasi ustida ishladim. Ishtirok sertifikati mavjud.",
       },
       projectSlug: "bilimyol-smart-edu",
       image: {
@@ -497,12 +554,12 @@ export const portfolio: Portfolio = {
         uz: "Mahsulot menejeri / Full-Stack dasturchi",
       },
       summary: {
-        en: "An adaptive learning MVP that identifies knowledge gaps and guides learners through personalized roadmaps, interactive lessons and targeted practice.",
-        uz: "Bilim bo‘shliqlarini aniqlab, o‘quvchini shaxsiy yo‘l xaritasi, interaktiv darslar va maqsadli mashqlar orqali yo‘naltiradigan moslashuvchan ta’lim MVP’si.",
+        en: "A personal learning path built around knowledge gaps, targeted practice and guidance from Yo‘lchi AI. Developed as a web and mobile MVP.",
+        uz: "Darslik emas — shaxsiy ta’lim yo‘li. Bilimdagi bo‘shliqlar, maqsadli mashqlar va Yo‘lchi AI yordamiga asoslangan veb va mobil MVP.",
       },
       description: {
-        en: "BilimYo‘l Smart Edu helps learners understand their strengths and knowledge gaps in mathematics and English. Placement assessments inform a knowledge map and an adaptive learning path with lessons and reinforcement exercises. The project combines React web and Flutter mobile applications with Supabase authentication and learner data. The web application includes parent, teacher and admin dashboards. Its Yo‘lchi AI tutor uses Gemini through a Supabase Edge Function for mistake feedback and lesson generation.",
-        uz: "BilimYo‘l Smart Edu o‘quvchiga matematika va ingliz tili bo‘yicha kuchli tomonlari hamda bilim bo‘shliqlarini aniqlashga yordam beradi. Diagnostik test natijalari asosida bilim xaritasi, darslar va mustahkamlash mashqlaridan iborat moslashuvchan o‘quv yo‘li shakllanadi. Loyiha React veb va Flutter mobil ilovalarini Supabase autentifikatsiyasi hamda o‘quvchi ma’lumotlari bilan birlashtiradi. Veb ilovada ota-ona, o‘qituvchi va administrator panellari mavjud. Yo‘lchi AI yordamchisi xatolarni tushuntirish va dars yaratish uchun Gemini’ga Supabase Edge Function orqali murojaat qiladi.",
+        en: "BilimYo‘l Smart Edu is a personalized education MVP for mathematics and English. It connects assessment, a skill map, adaptive roadmaps, lessons and reinforcement, with Yo‘lchi AI providing explanations and practice content. React and Flutter clients use a shared Supabase backend, and the web app includes parent, teacher and admin views.",
+        uz: "BilimYo‘l Smart Edu — matematika va ingliz tili uchun shaxsiylashtirilgan ta’lim platformasining MVP talqini. U diagnostika, bilim xaritasi, moslashuvchan o‘quv yo‘li, dars va mustahkamlash mashqlarini birlashtiradi. Yo‘lchi AI xatolarni tushuntiradi va mashq mazmunini yaratadi. React va Flutter ilovalari umumiy Supabase backend bilan ishlaydi. Veb ilovada ota-ona, o‘qituvchi va administrator panellari ham mavjud.",
       },
       contributions: [
         { en: "Product concept", uz: "Mahsulot konsepsiyasi" },
@@ -513,24 +570,167 @@ export const portfolio: Portfolio = {
       technologies: [
         "React",
         "TypeScript",
-        "Vite",
-        "Tailwind CSS",
-        "Zustand",
         "Flutter",
         "Dart",
-        "Riverpod",
         "Supabase",
         "PostgreSQL",
-        "Edge Functions",
-        "Google Gemini",
+        "Gemini",
       ],
+      featured: true,
       githubUrl: "https://github.com/PirimovUktam/bilimyol-smart-edu",
+      caseStudy: {
+        audience: {
+          en: "Learners studying mathematics and English, with progress views for parents and teachers.",
+          uz: "Matematika va ingliz tilini o‘rganayotgan o‘quvchilar, ularning natijalarini kuzatuvchi ota-onalar va o‘qituvchilar.",
+        },
+        problem: {
+          title: {
+            en: "The same course. Different starting points.",
+            uz: "Kurs bitta. Bilim darajasi har xil.",
+          },
+          description: {
+            en: "A fixed lesson sequence can ask one learner to repeat what they already know while moving another past a topic they have not understood. A test result alone does not explain the mistake or show what to study next.",
+            uz: "Darslar hamma uchun bir xil tartibda berilsa, bir o‘quvchi bilganini qayta o‘qiydi, boshqasi esa tushunmagan mavzusini ortda qoldiradi. Test natijasining o‘zi xato sababini yoki keyin nimani o‘rganish kerakligini ko‘rsatmaydi.",
+          },
+        },
+        solution: {
+          title: {
+            en: "A personal learning path, beyond the textbook.",
+            uz: "Darslik emas — shaxsiy ta’lim yo‘li.",
+          },
+          description: {
+            en: "Start with an assessment, make knowledge gaps visible, then connect them to lessons and targeted practice. BilimYo‘l’s product model uses each new result to adjust the next step, with Yo‘lchi AI explaining mistakes along the way.",
+            uz: "Avval diagnostika orqali bilimdagi bo‘shliqlar aniqlanadi, keyin ularga mos dars va mashqlar tanlanadi. BilimYo‘l modelida har bir yangi natija keyingi qadamni moslashtirishga xizmat qiladi. Yo‘lchi AI esa xato sababini tushuntirib boradi.",
+          },
+        },
+        roleSummary: {
+          en: "I worked across the product concept, application architecture, MVP implementation and AI integration, connecting the learning journey with its web, mobile and backend components.",
+          uz: "Mahsulot konsepsiyasi, ilova arxitekturasi, MVP yaratish va AI integratsiyasi ustida ishladim. O‘quv jarayonini veb, mobil va backend qismlari bilan bog‘ladim.",
+        },
+        architecture: {
+          title: {
+            en: "Web and mobile, connected by one backend.",
+            uz: "Veb va mobil ilova, umumiy backend.",
+          },
+          description: {
+            en: "Separate interfaces share learner accounts and progress data. Repository and service contracts keep the learning logic separate from screens and external integrations.",
+            uz: "Alohida interfeyslar umumiy foydalanuvchi hisoblari va o‘quv natijalari bilan ishlaydi. Repository va service interfeyslari o‘quv mantiqini ekranlar hamda tashqi integratsiyalardan ajratadi.",
+          },
+          clients: [
+            {
+              title: { en: "Web application", uz: "Veb ilova" },
+              description: { en: "React · TypeScript · Vite", uz: "React · TypeScript · Vite" },
+            },
+            {
+              title: { en: "Mobile application", uz: "Mobil ilova" },
+              description: { en: "Flutter · Dart · Riverpod", uz: "Flutter · Dart · Riverpod" },
+            },
+          ],
+          platform: {
+            title: { en: "Supabase", uz: "Supabase" },
+            description: {
+              en: "Shared authentication and learner data",
+              uz: "Umumiy autentifikatsiya va o‘quvchi ma’lumotlari",
+            },
+          },
+          services: [
+            {
+              title: { en: "PostgreSQL · RLS · RPC", uz: "PostgreSQL · RLS · RPC" },
+              description: {
+                en: "Progress records, role-based data access and rule-based assessment functions.",
+                uz: "O‘quv natijalari, rolga mos ma’lumot ruxsatlari va aniq qoidalarga asoslangan baholash funksiyalari.",
+              },
+            },
+            {
+              title: { en: "Edge Functions · Gemini", uz: "Edge Functions · Gemini" },
+              description: {
+                en: "Lesson generation and tutoring through a server-side AI service. API credentials stay on the server.",
+                uz: "Dars yaratish va tushuntirish uchun serverdagi AI xizmati. API kaliti serverda saqlanadi.",
+              },
+            },
+          ],
+          principle: {
+            title: { en: "Yo‘lchi AI’s role", uz: "Yo‘lchi AI vazifasi" },
+            description: {
+              en: "Explain mistakes, generate lessons and practice, and provide educational feedback. The model does not assign scores, roles or permissions; those belong to application and backend rules.",
+              uz: "Xatolarni tushuntirish, dars va mashqlar yaratish hamda o‘rganishga yordam beruvchi fikr bildirish. Model ball, rol yoki ruxsatlarni belgilamaydi — ular ilova va backend qoidalariga tegishli.",
+            },
+          },
+        },
+        learningLoop: {
+          title: {
+            en: "Each result shapes the next step.",
+            uz: "Har bir natija keyingi qadamni belgilaydi.",
+          },
+          description: {
+            en: "The learning model connects diagnosis, practice and feedback in a repeating cycle. A weak topic leads to reinforcement before the learner moves on.",
+            uz: "O‘quv modeli diagnostika, mashq va tushuntirishni takrorlanuvchi jarayonga birlashtiradi. O‘quvchi keyingi mavzuga o‘tishdan oldin qiynalgan mavzusini mustahkamlaydi.",
+          },
+          phases: [
+            {
+              title: { en: "Understand", uz: "Aniqlash" },
+              steps: [{ en: "Diagnosis", uz: "Diagnostika" }, { en: "Skill map", uz: "Bilim xaritasi" }],
+              description: {
+                en: "Identify strengths and knowledge gaps.",
+                uz: "Kuchli tomonlar va bilimdagi bo‘shliqlar aniqlanadi.",
+              },
+            },
+            {
+              title: { en: "Learn", uz: "O‘rganish" },
+              steps: [{ en: "Personalized roadmap", uz: "Shaxsiy o‘quv yo‘li" }, { en: "Lesson", uz: "Dars" }],
+              description: {
+                en: "Choose the next topic and work through it.",
+                uz: "Keyingi mavzu tanlanadi va dars o‘tiladi.",
+              },
+            },
+            {
+              title: { en: "Assess", uz: "Baholash" },
+              steps: [{ en: "Answer", uz: "Javob" }, { en: "Rule-based server scoring", uz: "Qoidalar asosida serverda baholash" }],
+              description: {
+                en: "Check the response against an answer key and update the skill score.",
+                uz: "Javob to‘g‘ri javob bilan solishtirilib, ko‘nikma natijasi yangilanadi.",
+              },
+            },
+            {
+              title: { en: "Reinforce", uz: "Mustahkamlash" },
+              steps: [{ en: "Yo‘lchi AI", uz: "Yo‘lchi AI" }, { en: "Targeted practice", uz: "Maqsadli mashq" }],
+              description: {
+                en: "Explain the mistake and practice the missing concept.",
+                uz: "Xato tushuntiriladi va qiyin bo‘lgan tushuncha mashq qilinadi.",
+              },
+            },
+            {
+              title: { en: "Adapt", uz: "Moslashtirish" },
+              steps: [{ en: "Route update", uz: "O‘quv yo‘lini yangilash" }, { en: "Reward & dashboard", uz: "Rag‘bat va natijalar paneli" }],
+              description: {
+                en: "Reflect the new result in the roadmap and progress view.",
+                uz: "Yangi natija o‘quv yo‘li va natijalar panelida aks etadi.",
+              },
+            },
+          ],
+          note: {
+            en: "This diagram describes the intended learning loop. The MVP’s generated-lesson interface is still being aligned with backend scoring.",
+            uz: "Sxema ko‘zlangan o‘quv jarayonini ko‘rsatadi. MVP’da yaratilgan dars interfeysini backend baholashi bilan to‘liq bog‘lash davom etmoqda.",
+          },
+        },
+        status: {
+          title: { en: "An adaptive learning MVP.", uz: "Moslashuvchan ta’lim MVP talqini." },
+          description: {
+            en: "The MVP includes React and Flutter learning flows, Supabase integration, Yo‘lchi AI and parent, teacher and admin views on the web. The project was presented at the National AI Hackathon in Qarshi.",
+            uz: "MVP tarkibida React va Flutter o‘quv jarayonlari, Supabase integratsiyasi, Yo‘lchi AI hamda veb ilovadagi ota-ona, o‘qituvchi va administrator panellari mavjud. Loyiha Qarshidagi Milliy AI xakatonida taqdim etilgan.",
+          },
+        },
+        nextStep: {
+          en: "Complete generated-lesson answer validation and verify the full learning journey across web and mobile.",
+          uz: "Yaratilgan darslarda javoblarni tekshirish jarayonini yakunlash va o‘quv yo‘lini veb hamda mobil ilovada boshidan oxirigacha tekshirish.",
+        },
+      },
       visual: {
         kind: "flow",
         wordmark: "BILIMYO‘L",
         caption: {
-          en: "Learning flow / Assessment to targeted practice",
-          uz: "O‘quv jarayoni / Diagnostikadan maqsadli mashqqacha",
+          en: "Learning model / From diagnosis to targeted practice",
+          uz: "O‘quv modeli / Diagnostikadan maqsadli mashqqacha",
         },
         steps: [
           { en: "Assessment", uz: "Diagnostika" },
@@ -543,9 +743,9 @@ export const portfolio: Portfolio = {
       slug: "lexhub",
       title: "LexHub",
       icon: "scale",
-      category: { en: "LegalTech / Mobile & AI", uz: "LegalTech / Mobil va AI" },
+      category: { en: "LegalTech / Mobile, Web & AI", uz: "LegalTech / Mobil, veb va AI" },
       summary: {
-        en: "Making legal problems easier to understand—with relevant legislation, clear guidance and document drafts.",
+        en: "Making legal problems easier to understand through relevant legislation, clear guidance and document drafts.",
         uz: "Huquqiy muammolarni tushunishni osonlashtirish: tegishli qonunchilik, tushunarli yo‘l-yo‘riq va hujjat loyihalari.",
       },
       description: {
@@ -554,12 +754,12 @@ export const portfolio: Portfolio = {
       },
       contributions: [
         { en: "Mobile application architecture", uz: "Mobil ilova arxitekturasi" },
-        { en: "Flutter development", uz: "Flutter dasturlash" },
+        { en: "Flutter development", uz: "Flutter bilan dasturlash" },
         { en: "UI / UX implementation", uz: "UI / UX dizaynini amalga oshirish" },
         { en: "Supabase integration", uz: "Supabase integratsiyasi" },
         { en: "Authentication", uz: "Autentifikatsiya" },
         { en: "Database integration", uz: "Ma’lumotlar bazasi integratsiyasi" },
-        { en: "AI functionality", uz: "AI funksionalligi" },
+        { en: "AI features", uz: "AI imkoniyatlari" },
         {
           en: "Legal document and source presentation flow",
           uz: "Huquqiy hujjatlar va manbalarni taqdim etish jarayoni",
@@ -626,7 +826,7 @@ export const portfolio: Portfolio = {
       slug: "kamoliddin-pharmacy",
       title: "Kamoliddin Pharmacy Telegram Bot",
       icon: "map",
-      category: { en: "Telegram / Location Finder", uz: "Telegram / Manzil izlash" },
+      category: { en: "Telegram / Business automation", uz: "Telegram / Biznesni avtomatlashtirish" },
       summary: {
         en: "A multilingual Telegram flow that helps customers find pharmacy branches by region and district.",
         uz: "Hudud va tuman orqali dorixona filiallarini topishga yordam beradigan ko‘p tilli Telegram bot.",
@@ -637,8 +837,8 @@ export const portfolio: Portfolio = {
       },
       contributions: [
         { en: "Bot architecture", uz: "Bot arxitekturasi" },
-        { en: "User flow", uz: "Foydalanuvchi jarayoni" },
-        { en: "Multilingual flow", uz: "Ko‘p tilli ishlash jarayoni" },
+        { en: "User journey", uz: "Foydalanish jarayoni" },
+        { en: "Multilingual navigation", uz: "Ko‘p tilli navigatsiya" },
         {
           en: "Region and district selection",
           uz: "Viloyat va tumanni tanlash",
@@ -681,8 +881,8 @@ export const portfolio: Portfolio = {
   ],
   footer: {
     note: {
-      en: "Built with purpose. Made with code.",
-      uz: "Maqsad bilan yaratilgan. Kod bilan qurilgan.",
+      en: "Mobile, full-stack and AI development.",
+      uz: "Mobil, Full-Stack va AI dasturlash.",
     },
   },
 };

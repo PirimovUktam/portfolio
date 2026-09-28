@@ -6,7 +6,7 @@ import "@/app/globals.css";
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#101310",
+  themeColor: "#080c16",
 };
 
 export default function EnglishLayout({ children }: { children: ReactNode }) {

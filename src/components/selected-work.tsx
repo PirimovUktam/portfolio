@@ -5,7 +5,6 @@ import { projectPath } from "@/lib/routes";
 import { ContentIcon } from "./content-icon";
 import { ProjectVisual } from "./project-visual";
 import { SectionHeading } from "./section-heading";
-import { MotionBackdrop } from "./motion-backdrop";
 
 export function ProjectLinks({ project, locale }: { project: Project; locale: Locale }) {
   if (!project.liveUrl && !project.githubUrl) return null;
@@ -22,7 +21,7 @@ function ProjectArticle({ project, index, locale }: { project: Project; index: n
   return (
     <article className="project-scene" data-scroll-scene data-motion-surface data-project-surface={index % 3} aria-labelledby={headingId}>
       <div className="project-stage" data-scroll-sticky>
-        <MotionBackdrop />
+
         <div className="container project-stage__inner">
           <div className="project-copy">
             <div className="project-meta">
@@ -51,7 +50,7 @@ export function SelectedWork({ locale }: { locale: Locale }) {
   if (!portfolio.projects.length) return null;
   return (
     <section id="work" className="work-section dark-section" aria-labelledby="work-heading" data-scroll-section data-motion-surface>
-      <MotionBackdrop />
+
       <div className="container work-heading"><SectionHeading section="work" number="01" locale={locale} /></div>
       <div className="projects-list">
         {portfolio.projects.map((project, index) => <ProjectArticle key={project.slug} project={project} index={index} locale={locale} />)}

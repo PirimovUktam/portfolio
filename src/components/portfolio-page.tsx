@@ -1,3 +1,4 @@
+import { CinematicBackdrop } from "./cinematic-backdrop";
 import { portfolio, type Locale } from "@/data/portfolio";
 import { SiteHeader } from "./site-header";
 import { Hero } from "./hero";
@@ -10,6 +11,7 @@ import { Recognition } from "./recognition";
 export function PortfolioPage({ locale }: { locale: Locale }) {
   return (
     <div id="top">
+      <CinematicBackdrop />
       <div className="reading-progress" aria-hidden="true" />
       <a className="skip-link" href="#main">{portfolio.ui.skipToContent[locale]}</a>
       <SiteHeader locale={locale} />

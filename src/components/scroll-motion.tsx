@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
+import { createCinematicRenderer } from "@/lib/cinematic-renderer";
 
 type MotionValue = {
   element: HTMLElement;
@@ -54,6 +55,8 @@ export function ScrollMotion(): null {
     };
     const pageProgress = createValue(root, "--page-progress");
     const scrollVelocity = createValue(root, "--scroll-velocity");
+    const storyProgress = createValue(root, "--story-progress");
+    const heroProgress = createValue(root, "--hero-progress");
     const tracks: ScrollTrack[] = [
       ...Array.from(root.querySelectorAll<HTMLElement>("[data-scroll-scene]"),
         (element) => ({
@@ -70,11 +73,6 @@ export function ScrollMotion(): null {
         (element) => ({
           element, top: 0, height: 0, stickyTop: 0, pinned: false,
           enter: createValue(element, "--reveal-enter"),
-        })),
-      ...Array.from(root.querySelectorAll<HTMLElement>("[data-motion-surface]"),
-        (element) => ({
-          element, top: 0, height: 0, stickyTop: 0, pinned: false,
-          progress: createValue(element, "--surface-progress"),
         })),
     ];
     const tilts = Array.from(root.querySelectorAll<HTMLElement>("[data-tilt]"),
@@ -97,6 +95,14 @@ export function ScrollMotion(): null {
     let scrollRange = 1;
     let lastScrollY = window.scrollY;
     let lastScrollTime = 0;
+    const canvas = root.querySelector<HTMLCanvasElement>("[data-cinematic-canvas]");
+    // A chapter is a content boundary, never an additional scroll container.
+    const chapters = Array.from(root.querySelectorAll<HTMLElement>(
+      "[data-scroll-scene], [data-scroll-section], .project-details, [data-case-chapter]",
+    )).filter((element) => !element.querySelector("[data-scroll-scene]"));
+    let chapterPositions: number[] = [];
+    let cinematic: ReturnType<typeof createCinematicRenderer> = null;
+    let renderedFrame = "";
 
     const measure = () => {
       viewportHeight = Math.max(1, window.innerHeight);
@@ -124,6 +130,10 @@ export function ScrollMotion(): null {
         track.height = track.element.offsetHeight;
       });
       scrollRange = Math.max(1, document.documentElement.scrollHeight - viewportHeight);
+      chapterPositions = chapters.map((element, index) => index === 0 ? 0 :
+        clamp(layoutTop(element) - viewportHeight * .35, 0, scrollRange));
+      cinematic?.resize(window.innerWidth, viewportHeight);
+      renderedFrame = "";
       tilts.forEach((tilt) => { tilt.bounds = null; });
       geometryDirty = false;
       targetsDirty = true;
@@ -137,6 +147,17 @@ export function ScrollMotion(): null {
       const progressBetween = (start: number, end: number) =>
         clamp((scrollY - start) / Math.max(1, Math.min(end, scrollRange) - start));
       pageProgress.target = clamp(scrollY / scrollRange);
+      let chapter = 0;
+      for (let index = 1; index < chapterPositions.length; index++) {
+        const start = chapterPositions[index - 1];
+        const end = chapterPositions[index];
+        if (scrollY >= end) chapter = index;
+        else {
+          chapter = index - 1 + clamp((scrollY - start) / Math.max(1, end - start));
+          break;
+        }
+      }
+      storyProgress.target = chapter / Math.max(1, chapterPositions.length - 1);
       tracks.forEach((track) => {
         const hasFocus = focused?.matches(":focus-visible") && track.element.contains(focused);
         if (track.enter) {
@@ -159,6 +180,7 @@ export function ScrollMotion(): null {
               );
         }
       });
+      heroProgress.target = tracks.find((track) => track.element.matches("[data-scroll-scene]"))?.progress?.target ?? pageProgress.target;
       targetsDirty = false;
     };
 
@@ -199,9 +221,24 @@ export function ScrollMotion(): null {
           value.written = output;
         }
       });
+      const portraitTilt = tilts[0];
+      const cinematicFrame = {
+        chapter: storyProgress.current,
+        hero: heroProgress.current,
+        velocity: scrollVelocity.current,
+        pointerX: portraitTilt?.x.current ?? 0,
+        pointerY: portraitTilt?.y.current ?? 0,
+        reducedMotion: reducedMotion.matches,
+      };
+      const signature = Object.values(cinematicFrame).map((value) =>
+        typeof value === "number" ? value.toFixed(4) : String(value)).join(",");
+      if (signature !== renderedFrame) {
+        cinematic?.render(cinematicFrame);
+        renderedFrame = signature;
+      }
       snap = false;
       previousTime = unsettled ? time : 0;
-      if (unsettled) frame = window.requestAnimationFrame(tick);
+      if (unsettled && frame === null) frame = window.requestAnimationFrame(tick);
     };
 
     const schedule = () => {
@@ -214,6 +251,7 @@ export function ScrollMotion(): null {
       geometryDirty = true;
       schedule();
     };
+    if (canvas) cinematic = createCinematicRenderer(canvas, invalidateGeometry);
 
     const resetPointers = () => {
       tilts.forEach((tilt) => {
@@ -331,12 +369,6 @@ export function ScrollMotion(): null {
     resizeObserver?.observe(root);
     tracks.forEach(({ element }) => resizeObserver?.observe(element));
     root.querySelectorAll<HTMLElement>("[data-scroll-sticky]").forEach((element) => resizeObserver?.observe(element));
-    const surfaceObserver = new IntersectionObserver((entries) => {
-      entries.forEach(({ target, isIntersecting }) => {
-        (target as HTMLElement).dataset.motionVisible = String(isIntersecting);
-      });
-    });
-    root.querySelectorAll<HTMLElement>("[data-motion-surface]").forEach((element) => surfaceObserver.observe(element));
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", invalidateGeometry, { passive: true });
     window.addEventListener("beforeprint", beforePrint);
@@ -352,12 +384,11 @@ export function ScrollMotion(): null {
 
     return () => {
       disposed = true;
+      cinematic?.dispose();
       clearMotion();
       delete root.dataset.motion;
       resizeObserver?.disconnect();
-      surfaceObserver.disconnect();
       root.style.removeProperty("--ambient-play-state");
-      root.querySelectorAll<HTMLElement>("[data-motion-surface]").forEach((element) => { delete element.dataset.motionVisible; });
       tracks.forEach(({ element }) => element.style.removeProperty("--scene-stage-height"));
       pointerCleanups.forEach((cleanup) => cleanup());
       window.removeEventListener("scroll", onScroll);

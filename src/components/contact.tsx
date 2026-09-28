@@ -1,13 +1,12 @@
 import { ArrowUp, ArrowUpRight, Asterisk } from "lucide-react";
 import { portfolio, type Locale } from "@/data/portfolio";
 import { SocialLinks } from "./social-links";
-import { MotionBackdrop } from "./motion-backdrop";
 
 export function Contact({ locale }: { locale: Locale }) {
   const content = portfolio.sections.contact;
   return (
     <footer id="contact" className="dark-section contact-section" data-scroll-section data-motion-surface aria-labelledby="contact-heading">
-      <MotionBackdrop />
+
       <div className="container">
         <div className="section-kicker"><span>{portfolio.recognitions.length ? "07" : "06"}</span><span>{content.eyebrow[locale]}</span></div>
         <div className="contact-grid" data-reveal>
