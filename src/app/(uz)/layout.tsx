@@ -6,12 +6,12 @@ import "@/app/globals.css";
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#101310",
+  themeColor: "#181419",
 };
 
 export default function UzbekLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="uz">
+    <html lang="uz" data-scroll-behavior="smooth">
       <body className={`${displayFont.variable} ${bodyFont.variable}`}>
         {children}
       </body>

@@ -1,26 +1,31 @@
-import { ArrowUp, ArrowUpRight, Asterisk } from "lucide-react";
+import Link from "next/link";
+import { ArrowUp, ArrowUpRight } from "lucide-react";
 import { portfolio, type Locale } from "@/data/portfolio";
-import { SocialLinks } from "./social-links";
+import { homePath } from "@/lib/routes";
+import { SocialLinks } from "@/components/social-links";
 
 export function Contact({ locale }: { locale: Locale }) {
-  const content = portfolio.sections.contact;
-  return (
-    <footer id="contact" className="dark-section contact-section" data-scroll-section data-motion-surface aria-labelledby="contact-heading">
+  const { profile, sections: { contact }, ui } = portfolio;
 
-      <div className="container">
-        <div className="section-kicker"><span>{portfolio.recognitions.length ? "07" : "06"}</span><span>{content.eyebrow[locale]}</span></div>
-        <div className="contact-grid" data-reveal>
-          <h2 className="display contact-title" id="contact-heading">{content.heading[locale]}</h2>
-          <div className="contact-aside"><Asterisk size={64} strokeWidth={1} aria-hidden="true" /><p>{content.intro[locale]}</p></div>
+  return (
+    <footer className="contact-section" id="contact">
+      <div className="shell">
+        <div className="contact-main">
+          <div>
+            <p className="eyebrow">{contact.label[locale]}</p>
+            <h2 className="section-title">{contact.title[locale]}</h2>
+            <p>{contact.intro[locale]}</p>
+          </div>
+          <a className="button button-dark" href={"mailto:" + profile.email}>
+            {profile.email} <ArrowUpRight aria-hidden="true" size={20} />
+          </a>
         </div>
-        <div className="contact-links" data-reveal>
-          <a className="email-link" href={`mailto:${portfolio.profile.email}`}><span>{portfolio.profile.email}</span><ArrowUpRight aria-hidden="true" /></a>
+        <div className="contact-foot">
+          <Link className="footer-name" href={homePath(locale)}>{profile.name}</Link>
           <SocialLinks />
-        </div>
-        <div className="footer-bottom">
-          <p>© {new Date().getFullYear()} {portfolio.profile.name}</p>
-          <p className="footer-note">{portfolio.footer.note[locale]}</p>
-          <a href="#top">{portfolio.ui.backToTop[locale]}<ArrowUp size={14} aria-hidden="true" /></a>
+          <a className="back-top" href="#top" aria-label={ui.backToTop[locale]}>
+            <ArrowUp aria-hidden="true" size={21} />
+          </a>
         </div>
       </div>
     </footer>

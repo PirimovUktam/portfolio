@@ -1,49 +1,48 @@
-import { ArrowRight } from "lucide-react";
-import { portfolio, type Locale, type Project } from "@/data/portfolio";
-import { ContentIcon } from "./content-icon";
-import { PortfolioImage } from "./portfolio-image";
+import { ResponsiveImage } from "@/components/responsive-image";
+import type { Locale, Project } from "@/data/portfolio";
 
-export function ProjectFlow({ project, locale }: { project: Project; locale: Locale }) {
-  if (!project.visual.steps?.length) return null;
-  return (
-    <ol className="project-flow">
-      {project.visual.steps.map((step, index) => (
-        <li key={step.en}>
-          <span className="flow-number">{String(index + 1).padStart(2, "0")}</span>
-          <span className="flow-label">{step[locale]}</span>
-          {index < project.visual.steps!.length - 1 && <ArrowRight size={24} aria-hidden="true" />}
-        </li>
-      ))}
-    </ol>
-  );
-}
+export function ProjectVisual({
+  cover,
+  locale,
+  detail = false,
+}: {
+  cover: NonNullable<Project["cover"]>;
+  locale: Locale;
+  detail?: boolean;
+}) {
+  const { tone, image, inset } = cover;
+  const portrait = image.height > image.width;
+  const landscapeSizes = detail
+    ? "(max-width: 1150px) 75vw, 54rem"
+    : "(max-width: 760px) 75vw, (max-width: 1440px) 40vw, 36rem";
+  const portraitSizes = detail
+    ? "(max-width: 760px) 40vw, 18rem"
+    : "(max-width: 760px) 40vw, (max-width: 1440px) 15.6vw, 14rem";
+  const insetSizes = detail
+    ? "(max-width: 1150px) 20vw, 13.5rem"
+    : "(max-width: 760px) 20vw, (max-width: 1440px) 11vw, 9rem";
 
-export function ProjectVisual({ project, locale, priority = false }: { project: Project; locale: Locale; priority?: boolean }) {
-  if (project.image) {
-    return (
-      <figure className="project-visual project-art project-art--image">
-        <div className="project-art__canvas">
-          <PortfolioImage image={project.image} locale={locale} unavailableLabel={portfolio.ui.imageUnavailable[locale]} priority={priority} sizes="(max-width: 959px) 100vw, 640px" />
-        </div>
-        <figcaption>{project.visual.caption[locale]}</figcaption>
-      </figure>
-    );
-  }
   return (
-    <figure className={"project-visual project-art project-art--" + project.icon}>
-      <div className="project-art__canvas">
-        <div className="project-art__sweep" aria-hidden="true" />
-        <div className="project-art__hero" aria-hidden="true"><ContentIcon name={project.icon} size={190} strokeWidth={1.6} /></div>
-        <div className="project-art__diagram">
-          {project.visual.steps?.length ? <ProjectFlow project={project} locale={locale} /> : project.contributions.length > 0 ? (
-            <div className="project-focus">
-              <span className="project-focus__label">{portfolio.ui.focus[locale]}</span>
-              <ol>{project.contributions.slice(0, 3).map((item, index) => <li key={item.en}><span>{String(index + 1).padStart(2, "0")}</span>{item[locale]}</li>)}</ol>
-            </div>
-          ) : null}
+    <figure className={"project-visual project-visual--" + tone} data-depth={detail ? undefined : ""}>
+      <div className="project-surface">
+        <div className={portrait ? "project-screen project-screen--portrait" : "project-screen"}>
+          <ResponsiveImage
+            image={image}
+            locale={locale}
+            sizes={portrait ? portraitSizes : landscapeSizes}
+            loading={detail ? "eager" : undefined}
+          />
         </div>
+        {inset && (
+          <div className="project-inset">
+            <ResponsiveImage
+              image={inset}
+              locale={locale}
+              sizes={insetSizes}
+            />
+          </div>
+        )}
       </div>
-      <figcaption>{project.visual.caption[locale]}</figcaption>
     </figure>
   );
 }

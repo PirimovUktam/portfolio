@@ -1,59 +1,61 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { portfolio, type Locale, type Project } from "@/data/portfolio";
+import { portfolio, projects, type Locale } from "@/data/portfolio";
+import { ProjectVisual } from "@/components/project-visual";
 import { projectPath } from "@/lib/routes";
-import { ContentIcon } from "./content-icon";
-import { ProjectVisual } from "./project-visual";
-import { SectionHeading } from "./section-heading";
-
-export function ProjectLinks({ project, locale }: { project: Project; locale: Locale }) {
-  if (!project.liveUrl && !project.githubUrl) return null;
-  return (
-    <div className="project-links">
-      {project.liveUrl && <a href={project.liveUrl} className="text-link">{portfolio.ui.liveDemo[locale]}<ArrowUpRight size={22} aria-hidden="true" /></a>}
-      {project.githubUrl && <a href={project.githubUrl} className="text-link">{portfolio.ui.sourceCode[locale]}<ArrowUpRight size={22} aria-hidden="true" /></a>}
-    </div>
-  );
-}
-
-function ProjectArticle({ project, index, locale }: { project: Project; index: number; locale: Locale }) {
-  const headingId = "project-" + project.slug + "-heading";
-  return (
-    <article className="project-scene" data-scroll-scene data-motion-surface data-project-surface={index % 3} aria-labelledby={headingId}>
-      <div className="project-stage" data-scroll-sticky>
-
-        <div className="container project-stage__inner">
-          <div className="project-copy">
-            <div className="project-meta">
-              <span className="project-sequence">{String(index + 1).padStart(2, "0")}<span aria-hidden="true"> / </span>{String(portfolio.projects.length).padStart(2, "0")}</span>
-              <span className="project-category"><ContentIcon name={project.icon} size={28} />{project.category[locale]}</span>
-            </div>
-            <h3 className="project-title" id={headingId}>
-              <Link href={projectPath(locale, project.slug)}><span>{project.title}</span><ArrowUpRight aria-hidden="true" /></Link>
-            </h3>
-            <p className="project-summary">{project.summary[locale]}</p>
-            {project.contributions.length > 0 && <ul className="project-contributions">{project.contributions.slice(0, 2).map((item) => <li key={item.en}>{item[locale]}</li>)}</ul>}
-            {project.technologies.length > 0 && <p className="project-tech">{project.technologies.join(" / ")}</p>}
-            <div className="project-bottom">
-              <Link className="project-action" href={projectPath(locale, project.slug)}>{portfolio.ui.caseStudy[locale]}<ArrowUpRight size={26} aria-hidden="true" /></Link>
-              <ProjectLinks project={project} locale={locale} />
-            </div>
-          </div>
-          <ProjectVisual project={project} locale={locale} />
-        </div>
-      </div>
-    </article>
-  );
-}
 
 export function SelectedWork({ locale }: { locale: Locale }) {
-  if (!portfolio.projects.length) return null;
-  return (
-    <section id="work" className="work-section dark-section" aria-labelledby="work-heading" data-scroll-section data-motion-surface>
+  const { sections: { work }, ui } = portfolio;
+  const featured = projects.filter((project) => project.featured);
+  const others = projects.filter((project) => !project.featured);
 
-      <div className="container work-heading"><SectionHeading section="work" number="01" locale={locale} /></div>
-      <div className="projects-list">
-        {portfolio.projects.map((project, index) => <ProjectArticle key={project.slug} project={project} index={index} locale={locale} />)}
+  return (
+    <section aria-labelledby="work-title" className="work-section" id="work">
+      <div className="shell">
+        <div className="section-intro" data-reveal="">
+          <div>
+            <p className="eyebrow section-index">{work.label[locale]}</p>
+            <h2 className="section-title" id="work-title">{work.title[locale]}</h2>
+          </div>
+          <p>{work.intro[locale]}</p>
+        </div>
+
+        <div className="project-grid">
+          {featured.map((project) => (
+            <article className="featured-project" key={project.slug}>
+              {project.cover && <ProjectVisual cover={project.cover} locale={locale} />}
+              <div className="project-copy">
+                <p className="eyebrow">{project.category[locale]}</p>
+                <h3>{project.title}</h3>
+                <p className="project-summary">{project.summary[locale]}</p>
+                <Link
+                  aria-label={ui.viewProject[locale] + " — " + project.title}
+                  className="text-link"
+                  href={projectPath(locale, project.slug)}
+                >
+                  {ui.viewProject[locale]} <ArrowUpRight aria-hidden="true" size={18} />
+                </Link>
+              </div>
+            </article>
+          ))}
+        </div>
+
+        {others.length > 0 && (
+          <div className="project-index">
+            <h3 className="eyebrow">{ui.moreWork[locale]}</h3>
+            <ul>
+              {others.map((project) => (
+                <li key={project.slug}>
+                  <Link className="index-link" href={projectPath(locale, project.slug)}>
+                    <span className="index-title">{project.title}</span>
+                    <span className="index-category">{project.category[locale]}</span>
+                    <ArrowUpRight aria-hidden="true" size={19} />
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
     </section>
   );

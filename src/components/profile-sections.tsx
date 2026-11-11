@@ -1,155 +1,48 @@
+import { ResponsiveImage } from "@/components/responsive-image";
 import { ArrowUpRight } from "lucide-react";
 import { portfolio, type Locale } from "@/data/portfolio";
-import { ContentIcon } from "./content-icon";
 
-function ProfileHeading({
-  section,
-  number,
-  locale,
-}: {
-  section: "expertise" | "services" | "journey";
-  number: string;
-  locale: Locale;
-}) {
-  const copy = portfolio.sections[section];
+export function About({ locale }: { locale: Locale }) {
+  const { experience, profile, sections: { about }, skills } = portfolio;
 
   return (
-    <header className="profile-heading" data-reveal>
-      <p className="profile-kicker">
-        <span className="profile-section-number" aria-hidden="true">{number}</span>
-        <span>{copy.eyebrow[locale]}</span>
-      </p>
-      <h2 id={`${section}-heading`}>{copy.heading[locale]}</h2>
-      <p className="profile-heading-intro">{copy.intro[locale]}</p>
-    </header>
-  );
-}
-
-export function ProfileSections({ locale }: { locale: Locale }) {
-  const sectionNumber = (number: number) => String(number + (portfolio.recognitions.length ? 1 : 0)).padStart(2, "0");
-  return (
-    <>
-      <section
-        id="about"
-        className="profile-section profile-about"
-        data-scroll-section
-        data-motion-surface
-        aria-labelledby="about-heading"
-      >
-
-        <div className="container profile-about-grid">
-          <header className="profile-about-heading" data-reveal>
-            <p className="profile-kicker">
-              <span className="profile-section-number" aria-hidden="true">{sectionNumber(2)}</span>
-              <span>{portfolio.sections.about.eyebrow[locale]}</span>
-            </p>
-            <h2 id="about-heading">{portfolio.about.statement[locale]}</h2>
-            <p className="profile-location">
-              <ContentIcon name="map" size={24} />
-              <span>{portfolio.profile.location[locale]}</span>
-            </p>
-          </header>
-          <div className="profile-about-story" data-reveal>
-            <p className="profile-bio">{portfolio.profile.bio[locale]}</p>
-            <ol className="profile-principles">
-              {portfolio.about.principles.map((principle, index) => (
-                <li key={principle.en}>
-                  <span aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
-                  <p>{principle[locale]}</p>
-                </li>
-              ))}
-            </ol>
-          </div>
+    <section aria-labelledby="about-title" className="shell about-section" id="about">
+      <figure className="profile-portrait">
+        <ResponsiveImage
+          image={profile.image}
+          locale={locale}
+          sizes="(max-width: 355px) 88vw, (max-width: 760px) 20rem, (max-width: 1050px) 37vw, 26rem"
+        />
+        <figcaption className="eyebrow">{profile.location[locale]}</figcaption>
+      </figure>
+      <div className="about-copy">
+        <div data-reveal="">
+          <p className="eyebrow section-index">{about.label[locale]}</p>
+          <h2 className="section-title" id="about-title">{about.title[locale]}</h2>
         </div>
-      </section>
-
-      <section
-        id="expertise"
-        className="profile-section profile-expertise"
-        data-scroll-section
-        data-motion-surface
-        aria-labelledby="expertise-heading"
-      >
-
-        <div className="container profile-expertise-layout">
-          <ProfileHeading section="expertise" number={sectionNumber(3)} locale={locale} />
-          <div className="profile-skills-list">
-            {portfolio.skills.map((skill) => (
-              <article className="profile-skill" key={skill.category.en} data-reveal>
-                <div className="profile-skill-icon">
-                  <ContentIcon name={skill.icon} size={40} />
-                </div>
-                <h3>{skill.category[locale]}</h3>
-                <ul>
-                  {skill.items.map((item) => (
-                    <li key={typeof item === "string" ? item : item.en}>
-                      {typeof item === "string" ? item : item[locale]}
-                    </li>
-                  ))}
-                </ul>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section
-        id="services"
-        className="profile-section profile-services"
-        data-scroll-section
-        data-motion-surface
-        aria-labelledby="services-heading"
-      >
-
-        <div className="container">
-          <ProfileHeading section="services" number={sectionNumber(4)} locale={locale} />
-          <ol className="profile-service-catalog">
-            {portfolio.services.map((service, index) => (
-              <li key={service.title.en} className="profile-service" data-reveal>
-                <div className="profile-service-top">
-                  <ContentIcon name={service.icon} size={52} />
-                  <span aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
-                </div>
-                <h3>{service.title[locale]}</h3>
-                <p>{service.description[locale]}</p>
-                <a
-                  href="#contact"
-                  className="profile-service-link"
-                  aria-label={`${portfolio.ui.contactLabel[locale]} — ${service.title[locale]}`}
-                >
-                  <span>{portfolio.ui.contactLabel[locale]}</span>
-                  <ArrowUpRight aria-hidden="true" size={24} />
+        <p className="about-bio">{profile.bio[locale]}</p>
+        <dl className="skill-list">
+          {skills.map(({ label, tools }) => (
+            <div key={label.en}>
+              <dt>{label[locale]}</dt>
+              <dd>{tools.join(" · ")}</dd>
+            </div>
+          ))}
+        </dl>
+        <ul className="experience-list">
+          {experience.map(({ title, detail, evidence }) => (
+            <li key={title.en}>
+              <h3>{title[locale]}</h3>
+              <p>{detail[locale]}</p>
+              {evidence && (
+                <a className="text-link" href={evidence.url}>
+                  {evidence.label[locale]} <ArrowUpRight aria-hidden="true" size={16} />
                 </a>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </section>
-
-      <section
-        id="journey"
-        className="profile-section profile-journey"
-        data-scroll-section
-        data-motion-surface
-        aria-labelledby="journey-heading"
-      >
-
-        <div className="container">
-          <ProfileHeading section="journey" number={sectionNumber(5)} locale={locale} />
-          <div className="profile-journey-track">
-            {portfolio.journey.map((item) => (
-              <article key={item.title.en} className="profile-journey-entry" data-reveal>
-                <div className="profile-journey-marker">
-                  <ContentIcon name={item.icon} size={36} />
-                </div>
-                <p className="profile-journey-label">{item.label[locale]}</p>
-                <h3>{item.title[locale]}</h3>
-                <p className="profile-journey-description">{item.description[locale]}</p>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-    </>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
   );
 }

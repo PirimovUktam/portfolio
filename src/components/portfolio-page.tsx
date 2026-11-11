@@ -1,28 +1,20 @@
-import { CinematicBackdrop } from "./cinematic-backdrop";
-import { portfolio, type Locale } from "@/data/portfolio";
-import { SiteHeader } from "./site-header";
-import { Hero } from "./hero";
-import { SelectedWork } from "./selected-work";
-import { ProfileSections } from "./profile-sections";
-import { Contact } from "./contact";
-import { ScrollMotion } from "./scroll-motion";
-import { Recognition } from "./recognition";
+import type { Locale } from "@/data/portfolio";
+import { About } from "@/components/profile-sections";
+import { Contact } from "@/components/contact";
+import { Hero } from "@/components/hero";
+import { SelectedWork } from "@/components/selected-work";
+import { SiteHeader } from "@/components/site-header";
 
 export function PortfolioPage({ locale }: { locale: Locale }) {
   return (
-    <div id="top">
-      <CinematicBackdrop />
-      <div className="reading-progress" aria-hidden="true" />
-      <a className="skip-link" href="#main">{portfolio.ui.skipToContent[locale]}</a>
+    <div className="portfolio-home" id="top">
       <SiteHeader locale={locale} />
-      <main id="main">
+      <main id="main-content" tabIndex={-1}>
         <Hero locale={locale} />
         <SelectedWork locale={locale} />
-        <Recognition locale={locale} />
-        <ProfileSections locale={locale} />
+        <About locale={locale} />
       </main>
       <Contact locale={locale} />
-      <ScrollMotion />
     </div>
   );
 }

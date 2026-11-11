@@ -1,50 +1,67 @@
-import { CinematicBackdrop } from "./cinematic-backdrop";
 import Link from "next/link";
-import { ArrowLeft, ArrowUpRight } from "lucide-react";
-import { portfolio, type Locale, type Project } from "@/data/portfolio";
+import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
+import { portfolio, projects, type Locale, type Project } from "@/data/portfolio";
+import { Contact } from "@/components/contact";
+import { ProjectVisual } from "@/components/project-visual";
+import { SiteHeader } from "@/components/site-header";
 import { homePath, projectPath } from "@/lib/routes";
-import { SiteHeader } from "./site-header";
-import { ProjectVisual } from "./project-visual";
-import { ProjectLinks } from "./selected-work";
-import { PortfolioImage } from "./portfolio-image";
-import { Contact } from "./contact";
-import { ScrollMotion } from "./scroll-motion";
-import { ProjectCaseStudy } from "./project-case-study";
 
 export function ProjectPage({ locale, project }: { locale: Locale; project: Project }) {
-  const index = portfolio.projects.findIndex(({ slug }) => slug === project.slug);
-  const nextProject = portfolio.projects[(index + 1) % portfolio.projects.length];
+  const { ui } = portfolio;
+  const next = projects[projects.findIndex(({ slug }) => slug === project.slug) + 1] ?? projects[0];
+
   return (
     <div id="top">
-      <CinematicBackdrop />
-      <a className="skip-link" href="#main">{portfolio.ui.skipToContent[locale]}</a>
       <SiteHeader locale={locale} slug={project.slug} />
-      <main id="main" className="project-page" data-motion-surface>
-
-        <section className="container project-hero" data-scroll-scene aria-labelledby="project-heading">
-          <Link href={`${homePath(locale)}#work`} className="text-link project-back"><ArrowLeft size={16} aria-hidden="true" />{portfolio.ui.backToProjects[locale]}</Link>
-          <div className="project-meta"><span>{String(index + 1).padStart(2, "0")}</span><span>{project.category[locale]}</span></div>
-          <h1 className="display project-page-title" id="project-heading">{project.title}</h1>
-          <div className="project-lead"><p>{project.summary[locale]}</p><ProjectLinks project={project} locale={locale} /></div>
-          <ProjectVisual project={project} locale={locale} priority />
-        </section>
-        {project.caseStudy ? <ProjectCaseStudy project={project} locale={locale} /> : <section className="container project-details" aria-labelledby="overview-heading">
-          <div className="project-overview" data-reveal>
-            <p className="eyebrow">{portfolio.ui.projectOverview[locale]}</p>
-            <h2 id="overview-heading">{project.category[locale]}</h2>
-            <p>{project.description[locale]}</p>
-          </div>
-          <div className="project-detail-aside">
-            {project.role && <div data-reveal><h2 className="eyebrow">{portfolio.ui.myRole[locale]}</h2><p className="detail-contributions">{project.role[locale]}</p></div>}
-            {project.contributions.length > 0 && <div data-reveal><h2 className="eyebrow">{portfolio.ui.myContribution[locale]}</h2><ul className="detail-contributions">{project.contributions.map((item) => <li key={item.en}>{item[locale]}</li>)}</ul></div>}
-            {project.technologies.length > 0 && <div data-reveal><h2 className="eyebrow">{portfolio.ui.technologies[locale]}</h2><ul className="detail-tech">{project.technologies.map((technology) => <li key={technology}>{technology}</li>)}</ul></div>}
-          </div>
-        </section>}
-        {Boolean(project.screenshots?.length) && <div className="container project-gallery">{project.screenshots!.map((image) => <figure key={image.src} data-reveal><PortfolioImage image={image} locale={locale} unavailableLabel={portfolio.ui.imageUnavailable[locale]} /><figcaption>{image.alt[locale]}</figcaption></figure>)}</div>}
-        {nextProject && nextProject.slug !== project.slug && <div className="container next-project" data-reveal><span className="eyebrow">{portfolio.ui.nextProject[locale]}</span><Link className="display" href={projectPath(locale, nextProject.slug)}>{nextProject.title}<ArrowUpRight aria-hidden="true" /></Link></div>}
+      <main className="project-detail shell" id="main-content" tabIndex={-1}>
+        <Link className="text-link" href={homePath(locale) + "#work"}>
+          <ArrowLeft aria-hidden="true" size={18} /> {ui.back[locale]}
+        </Link>
+        <header className="detail-intro">
+          <p className="eyebrow section-index">{project.category[locale]}</p>
+          <h1>{project.title}</h1>
+          <p>{project.summary[locale]}</p>
+          {(project.liveUrl || project.githubUrl) && (
+            <div className="detail-actions">
+              {project.liveUrl && (
+                <a className="button button-accent" href={project.liveUrl}>
+                  {ui.demo[locale]} <ArrowUpRight aria-hidden="true" size={19} />
+                </a>
+              )}
+              {project.githubUrl && (
+                <a className="button button-outline" href={project.githubUrl}>
+                  {ui.source[locale]} <ArrowUpRight aria-hidden="true" size={19} />
+                </a>
+              )}
+            </div>
+          )}
+        </header>
+        {project.cover && <ProjectVisual cover={project.cover} locale={locale} detail />}
+        <div className="detail-facts">
+          <section aria-labelledby="detail-role">
+            <h2 className="eyebrow" id="detail-role">{ui.role[locale]}</h2>
+            <p>{project.role[locale]}</p>
+          </section>
+          <section aria-labelledby="detail-contributions">
+            <h2 className="eyebrow" id="detail-contributions">{ui.contributions[locale]}</h2>
+            <ul>{project.contributions.map((item) => <li key={item.en}>{item[locale]}</li>)}</ul>
+          </section>
+          <section aria-labelledby="detail-tech">
+            <h2 className="eyebrow" id="detail-tech">{ui.tech[locale]}</h2>
+            <p>{project.technologies.join(" · ")}</p>
+          </section>
+        </div>
+        {next && next.slug !== project.slug && (
+          <Link className="next-project" href={projectPath(locale, next.slug)}>
+            <span>
+              <span className="eyebrow">{ui.next[locale]}</span>
+              <span>{next.title}</span>
+            </span>
+            <ArrowRight aria-hidden="true" size={29} />
+          </Link>
+        )}
       </main>
       <Contact locale={locale} />
-      <ScrollMotion />
     </div>
   );
 }

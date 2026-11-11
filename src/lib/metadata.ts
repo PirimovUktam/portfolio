@@ -2,38 +2,8 @@ import type { Metadata } from "next";
 import { portfolio, type Locale, type Project } from "@/data/portfolio";
 import { homePath, projectPath } from "@/lib/routes";
 
-/** Canonicals must describe the production site, never a local or preview build. */
-export function getSiteUrl(): URL | undefined {
-  const candidates = [
-    portfolio.site.url,
-    process.env.VERCEL_PROJECT_PRODUCTION_URL
-      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-      : undefined,
-  ];
-
-  for (const candidate of candidates) {
-    if (!candidate) continue;
-
-    try {
-      const url = new URL(candidate);
-      if (
-        url.protocol === "https:" &&
-        url.hostname.includes(".") &&
-        !url.hostname.endsWith(".localhost") &&
-        !url.hostname.endsWith(".local") &&
-        !/^\d+(\.\d+){3}$/.test(url.hostname) &&
-        !url.username &&
-        !url.password &&
-        !url.port
-      ) {
-        return new URL(url.origin);
-      }
-    } catch {
-      // An unset or invalid deployment URL must not leak into generated metadata.
-    }
-  }
-
-  return undefined;
+export function getSiteUrl(): URL {
+  return new URL(portfolio.site.url);
 }
 
 export function productionPageUrl(path: string, siteUrl: URL): string {
@@ -53,32 +23,28 @@ export function buildPageMetadata(locale: Locale, project?: Project): Metadata {
     : homePath(locale);
   const englishRoute = project ? projectPath("en", project.slug) : homePath("en");
   const uzbekRoute = project ? projectPath("uz", project.slug) : homePath("uz");
-  const url = siteUrl ? productionPageUrl(route, siteUrl) : undefined;
-  const socialImage = project?.image ?? portfolio.site.socialImage ?? portfolio.profile.image;
-  const images = siteUrl
-    ? [{
-        url: new URL(socialImage.src, siteUrl).href,
-        width: socialImage.width,
-        height: socialImage.height,
-        alt: socialImage.alt[locale],
-      }]
-    : undefined;
+  const url = productionPageUrl(route, siteUrl);
+  const socialImage = project?.cover?.image ?? portfolio.site.socialImage;
+  const images = [{
+    url: new URL(socialImage.src, siteUrl).href,
+    width: socialImage.width,
+    height: socialImage.height,
+    alt: socialImage.alt[locale],
+  }];
 
   return {
     title,
     description,
     icons: { icon: { url: "/favicon.svg", type: "image/svg+xml", sizes: "any" } },
-    ...(siteUrl ? {
-      metadataBase: siteUrl,
-      alternates: {
-        canonical: url,
-        languages: {
-          en: productionPageUrl(englishRoute, siteUrl),
-          uz: productionPageUrl(uzbekRoute, siteUrl),
-          "x-default": productionPageUrl(englishRoute, siteUrl),
-        },
+    metadataBase: siteUrl,
+    alternates: {
+      canonical: url,
+      languages: {
+        en: productionPageUrl(englishRoute, siteUrl),
+        uz: productionPageUrl(uzbekRoute, siteUrl),
+        "x-default": productionPageUrl(englishRoute, siteUrl),
       },
-    } : {}),
+    },
     openGraph: {
       title,
       description,
@@ -86,14 +52,14 @@ export function buildPageMetadata(locale: Locale, project?: Project): Metadata {
       type: "website",
       locale: locale === "uz" ? "uz_UZ" : "en_US",
       alternateLocale: locale === "uz" ? "en_US" : "uz_UZ",
-      ...(url ? { url } : {}),
-      ...(images ? { images } : {}),
+      url,
+      images,
     },
     twitter: {
       card: socialImage.width / socialImage.height >= 1.5 ? "summary_large_image" : "summary",
       title,
       description,
-      ...(images ? { images } : {}),
+      images,
     },
   };
 }

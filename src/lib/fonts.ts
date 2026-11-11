@@ -1,8 +1,8 @@
-import { Syne, Manrope } from "next/font/google";
+import { Manrope, Space_Grotesk } from "next/font/google";
 
-export const displayFont = Syne({
+export const displayFont = Space_Grotesk({
   subsets: ["latin", "latin-ext"],
-  weight: ["600", "700", "800"],
+  weight: "700",
   variable: "--font-display",
   display: "swap",
 });

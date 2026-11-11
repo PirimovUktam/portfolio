@@ -6,12 +6,12 @@ import "@/app/globals.css";
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#101310",
+  themeColor: "#181419",
 };
 
 export default function EnglishLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" data-scroll-behavior="smooth">
       <body className={`${displayFont.variable} ${bodyFont.variable}`}>
         {children}
       </body>
