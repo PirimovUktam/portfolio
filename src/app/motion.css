@@ -20,6 +20,7 @@
 
 .scene-plane {
   transform: rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+  transition: transform 220ms ease-out;
 }
 
 .scene-art {
@@ -27,6 +28,18 @@
   border: 1px solid #59434f;
   border-radius: 5px;
   background: #211522;
+}
+
+.scene-art::after {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at var(--glow-x, 50%) var(--glow-y, 50%),
+    rgba(215, 247, 77, 0.16),
+    transparent 58%
+  );
+  pointer-events: none;
+  content: "";
 }
 
 .hero-image {
@@ -48,6 +61,39 @@
   right: 6%;
   color: var(--acid);
   transform: translateZ(35px);
+}
+
+.scene-hud {
+  position: absolute;
+  bottom: 6.5%;
+  left: 6%;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.42rem;
+  padding: 0.26rem 0.58rem;
+  border: 1px solid rgba(215, 247, 77, 0.38);
+  border-radius: 2px;
+  background: rgba(18, 15, 19, 0.84);
+  backdrop-filter: blur(4px);
+  color: var(--acid);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  pointer-events: none;
+  transform: translateZ(32px);
+}
+
+.scene-hud-dot {
+  width: 0.38rem;
+  height: 0.38rem;
+  border-radius: 50%;
+  background: var(--acid);
+  box-shadow: 0 0 8px var(--acid);
+}
+
+.scene-hud-coords {
+  color: var(--text);
 }
 
 @media (hover: hover) {
@@ -78,86 +124,193 @@
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  html {
-    scroll-behavior: smooth;
+html {
+  scroll-behavior: smooth;
+}
+
+.button,
+.site-nav a,
+.language-link {
+  transition: color 150ms ease-out, background-color 150ms ease-out, border-color 150ms ease-out;
+}
+
+.button svg,
+.text-link svg,
+.index-link svg,
+.next-project svg {
+  transition: translate 180ms ease-out;
+}
+
+:is(.button, .text-link, .index-link, .next-project):hover svg {
+  translate: 2px -2px;
+}
+
+@supports (animation-timeline: view()) {
+  #top[data-motion="on"] .scene-orbit {
+    animation: scene-scroll linear both;
+    animation-timeline: scroll(root block);
+    animation-range: 0 38rem;
   }
 
-  .scene-plane {
-    transition: transform 220ms ease-out;
+  #top[data-motion="on"] [data-depth] .project-surface {
+    animation: project-scroll linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 58%;
   }
 
-  .button,
-  .site-nav a,
-  .language-link {
-    transition: color 150ms ease-out, background-color 150ms ease-out;
+  #top[data-motion="on"] [data-reveal] {
+    animation: heading-scroll linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 33%;
   }
+}
 
-  .button svg,
-  .text-link svg,
-  .index-link svg,
-  .next-project svg {
-    transition: translate 180ms ease-out;
+/* Universal Top Reading Progress Indicator */
+.scroll-progress-bar {
+  position: absolute;
+  inset: auto 0 -1px;
+  height: 3px;
+  background: var(--acid);
+  box-shadow: 0 0 10px rgba(215, 247, 77, 0.55);
+  transform-origin: 0% 50%;
+  pointer-events: none;
+  z-index: 20;
+}
+
+/* Typewriter Dynamic Role & Blinking Terminal Cursor */
+.typewriter-container {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.25em;
+}
+
+.typewriter-text {
+  white-space: nowrap;
+}
+
+.typewriter-cursor {
+  display: inline-block;
+  width: 0.55ch;
+  height: 1.1em;
+  margin-left: 0.25ch;
+  background: currentColor;
+  vertical-align: -0.15em;
+  animation: typewriter-blink 1s step-end infinite;
+}
+
+@keyframes typewriter-blink {
+  0%,
+  100% {
+    opacity: 1;
   }
-
-  :is(.button, .text-link, .index-link, .next-project):hover svg {
-    translate: 2px -2px;
+  50% {
+    opacity: 0;
   }
+}
 
-  @supports (animation-timeline: view()) {
-    .portfolio-home .site-header::after {
-      position: absolute;
-      inset: auto 0 -1px;
-      height: 2px;
-      background: var(--acid);
-      content: "";
-      pointer-events: none;
-      transform-origin: left;
-      animation: reading-progress linear both;
-      animation-timeline: scroll(root block);
-    }
+/* Availability Pulse Beacon & Status Badge */
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  line-height: 1.15;
+}
 
-    .scene-orbit {
-      animation: scene-scroll linear both;
-      animation-timeline: scroll(root block);
-      animation-range: 0 38rem;
-    }
+.brand-name {
+  font-weight: 800;
+  color: var(--text);
+  font-size: 0.95rem;
+}
 
-    [data-depth] .project-surface {
-      animation: project-scroll linear both;
-      animation-timeline: view();
-      animation-range: entry 0% cover 58%;
-    }
+.availability-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 0.15rem;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
 
-    [data-reveal] {
-      animation: heading-scroll linear both;
-      animation-timeline: view();
-      animation-range: entry 0% cover 33%;
-    }
+.availability-label {
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 500;
+}
+
+.pulse-beacon {
+  position: relative;
+  display: inline-flex;
+  width: 0.5rem;
+  height: 0.5rem;
+  flex-shrink: 0;
+}
+
+.pulse-beacon-ping {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background-color: #34d399;
+  opacity: 0.75;
+  animation: beacon-ping 1.6s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+.pulse-beacon-dot {
+  position: relative;
+  display: inline-flex;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 9999px;
+  background-color: #10b981;
+}
+
+@keyframes beacon-ping {
+  75%,
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
   }
 }
 
 @keyframes reading-progress {
-  from { scale: 0 1; }
-  to { scale: 1 1; }
+  from {
+    scale: 0 1;
+  }
+  to {
+    scale: 1 1;
+  }
 }
 
 @keyframes scene-scroll {
-  to { transform: translateY(1.2rem) translateZ(-60px) rotateY(-9deg) rotateX(7deg); }
+  to {
+    transform: translateY(1.2rem) translateZ(-60px) rotateY(-9deg) rotateX(7deg);
+  }
 }
 
 @keyframes project-scroll {
-  from { transform: rotateX(12deg) rotateY(-9deg) scale(0.94); }
-  to { transform: rotateX(0) rotateY(0) scale(1); }
+  from {
+    transform: rotateX(12deg) rotateY(-9deg) scale(0.94);
+  }
+  to {
+    transform: rotateX(0) rotateY(0) scale(1);
+  }
 }
 
 @keyframes heading-scroll {
-  from { transform: translateY(0.85rem); }
-  to { transform: translateY(0); }
+  from {
+    transform: translateY(0.85rem);
+  }
+  to {
+    transform: translateY(0);
+  }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .scene-plane {
-    transform: none;
-  }
+/* Explicit opt-out only if #top[data-motion="off"] is set */
+#top[data-motion="off"] *,
+#top[data-motion="off"] *::before,
+#top[data-motion="off"] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
 }
