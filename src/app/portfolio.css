@@ -181,192 +181,346 @@
   min-width: 0;
 }
 
-.cockpit-wrapper {
+.nexus-wrapper {
   position: relative;
-  padding-top: 0.4rem;
+  padding-top: 0.45rem;
 }
 
-.cockpit-surface {
+.nexus-stage {
   position: relative;
+  isolation: isolate;
   overflow: hidden;
-  border: 1px solid #59434f;
-  border-radius: 6px;
-  background: linear-gradient(165deg, #221b24 0%, #151117 100%);
+  padding: 1rem 1.15rem 1.15rem;
+  border: 1px solid #4e414c;
+  border-radius: 8px;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(215, 247, 77, 0.09), transparent 62%),
+    linear-gradient(165deg, #1f1922 0%, #110e14 55%, #17131a 100%);
   box-shadow:
-    0 24px 55px rgba(0, 0, 0, 0.48),
-    inset 0 1px 0 rgba(246, 240, 232, 0.08);
+    0 30px 70px rgba(0, 0, 0, 0.58),
+    0 0 0 1px rgba(215, 247, 77, 0.08),
+    inset 0 1px 0 rgba(246, 240, 232, 0.12);
 }
 
-.cockpit-surface::before {
+.nexus-stage::before {
   position: absolute;
+  z-index: -2;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, rgba(246, 240, 232, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(246, 240, 232, 0.04) 1px, transparent 1px);
+  background-position: center;
+  background-size: 1.85rem 1.85rem;
+  mask-image: radial-gradient(circle at 50% 45%, #000 35%, transparent 90%);
+  pointer-events: none;
+  content: "";
+}
+
+.nexus-stage::after {
+  position: absolute;
+  z-index: -1;
   inset: 0;
   background: radial-gradient(
-    circle at var(--glow-x, 75%) var(--glow-y, 20%),
-    rgba(215, 247, 77, 0.13),
-    transparent 55%
+    circle at var(--glow-x, 50%) var(--glow-y, 42%),
+    rgba(215, 247, 77, 0.16),
+    transparent 52%
   );
   pointer-events: none;
   content: "";
 }
 
-.cockpit-identity {
+.nexus-svg-canvas {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.nexus-orbit-outer {
+  transform-origin: 300px 135px;
+  animation: nexus-spin-cw 38s linear infinite;
+}
+
+.nexus-orbit-mid {
+  transform-origin: 300px 135px;
+  animation: nexus-spin-ccw 26s linear infinite;
+}
+
+.nexus-orbit-inner {
+  transform-origin: 300px 135px;
+  animation: nexus-spin-cw 18s linear infinite;
+}
+
+.nexus-beam {
+  stroke-width: 1.5px;
+  stroke-dasharray: 6 8;
+  opacity: 0.42;
+  animation: nexus-beam-flow 2.2s linear infinite;
+  transition: opacity 220ms ease, stroke-width 220ms ease;
+}
+
+.nexus-beam--active {
+  stroke-width: 2.8px;
+  stroke-dasharray: 10 5;
+  opacity: 1;
+  filter: drop-shadow(0 0 8px rgba(215, 247, 77, 0.75));
+  animation-duration: 0.95s;
+}
+
+@keyframes nexus-spin-cw {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes nexus-spin-ccw {
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+@keyframes nexus-beam-flow {
+  from {
+    stroke-dashoffset: 28;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.nexus-topbar {
+  position: relative;
+  z-index: 2;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 0.75rem;
-  padding: 1rem 1.15rem 0.9rem;
-  border-bottom: 1px solid #352b36;
-  background: rgba(18, 15, 19, 0.55);
+  gap: 0.5rem;
+  padding-bottom: 0.75rem;
+  margin-bottom: 0.85rem;
+  border-bottom: 1px solid rgba(246, 240, 232, 0.09);
 }
 
-.cockpit-user {
-  display: flex;
+.nexus-sys-title {
+  display: inline-flex;
   align-items: center;
-  gap: 0.75rem;
-  min-width: 0;
+  gap: 0.48rem;
+  color: var(--muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
 }
 
-.cockpit-avatar {
-  position: relative;
-  width: 2.85rem;
-  height: 2.85rem;
-  padding: 2px;
-  border: 1.5px solid var(--acid);
+.nexus-live-dot {
+  width: 0.45rem;
+  height: 0.45rem;
   border-radius: 50%;
-  flex-shrink: 0;
+  background: #10b981;
+  box-shadow: 0 0 10px #10b981;
 }
 
-.cockpit-avatar img {
+.nexus-sim-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.36rem;
+  padding: 0.26rem 0.62rem;
+  border: 1px solid rgba(215, 247, 77, 0.45);
+  border-radius: 999px;
+  background: rgba(215, 247, 77, 0.12);
+  color: var(--acid);
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: background-color 150ms ease, color 150ms ease, transform 150ms ease;
+}
+
+.nexus-sim-btn:hover {
+  background: var(--acid);
+  color: var(--ink);
+  transform: translateY(-1px);
+}
+
+/* Spatial 3-Column Constellation Grid */
+.nexus-constellation {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  grid-template-rows: repeat(2, auto);
+  align-items: center;
+  gap: 0.85rem 0.9rem;
+  margin-bottom: 1rem;
+  transform-style: preserve-3d;
+}
+
+.nexus-node--tl {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.nexus-node--tr {
+  grid-column: 3;
+  grid-row: 1;
+}
+
+.nexus-node--bl {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.nexus-node--br {
+  grid-column: 3;
+  grid-row: 2;
+}
+
+/* Central Holographic Architect Core */
+.nexus-core {
+  position: relative;
+  grid-column: 2;
+  grid-row: 1 / 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0.65rem 0.35rem;
+  transform: translateZ(28px);
+}
+
+.nexus-core-ring {
+  position: absolute;
+  width: 6.9rem;
+  height: 6.9rem;
+  border: 1.5px dashed rgba(215, 247, 77, 0.55);
+  border-radius: 50%;
+  animation: nexus-spin-cw 16s linear infinite;
+  pointer-events: none;
+}
+
+.nexus-core-pulse {
+  position: absolute;
+  width: 5.8rem;
+  height: 5.8rem;
+  border: 2px solid var(--acid);
+  border-radius: 50%;
+  opacity: 0;
+  animation: nexus-core-shockwave 1.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  pointer-events: none;
+}
+
+@keyframes nexus-core-shockwave {
+  0% {
+    transform: scale(0.88);
+    opacity: 0.85;
+  }
+  100% {
+    transform: scale(1.55);
+    opacity: 0;
+  }
+}
+
+.nexus-core-avatar {
+  position: relative;
+  width: 5.25rem;
+  height: 5.25rem;
+  padding: 3px;
+  border: 2px solid var(--acid);
+  border-radius: 50%;
+  background: #141116;
+  box-shadow:
+    0 0 28px rgba(215, 247, 77, 0.32),
+    0 12px 24px rgba(0, 0, 0, 0.55);
+  overflow: hidden;
+}
+
+.nexus-core-avatar img {
   width: 100%;
   height: 100%;
   border-radius: 50%;
   object-fit: cover;
 }
 
-.cockpit-avatar-dot {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  width: 0.62rem;
-  height: 0.62rem;
-  border: 2px solid #151117;
-  border-radius: 50%;
-  background: #10b981;
-}
-
-.cockpit-name-row {
-  display: flex;
-  flex-wrap: wrap;
+.nexus-core-tag {
+  display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
-}
-
-.cockpit-name {
-  color: var(--text);
-  font-size: 0.96rem;
-  font-weight: 800;
-}
-
-.cockpit-verified {
-  padding: 0.1rem 0.38rem;
-  border: 1px solid rgba(215, 247, 77, 0.4);
-  border-radius: 2px;
-  background: rgba(215, 247, 77, 0.12);
+  gap: 0.28rem;
+  margin-top: -0.55rem;
+  padding: 0.18rem 0.52rem;
+  border: 1px solid var(--acid);
+  border-radius: 999px;
+  background: #120f14;
   color: var(--acid);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   font-size: 0.6rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.5);
+  z-index: 2;
+}
+
+.nexus-core-sub {
+  margin-top: 0.25rem;
+  color: var(--muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.56rem;
   font-weight: 800;
   letter-spacing: 0.08em;
+  white-space: nowrap;
 }
 
-.cockpit-meta {
-  margin-top: 0.12rem;
-  color: var(--muted);
-  font-size: 0.74rem;
-}
-
-.cockpit-award-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  padding: 0.28rem 0.6rem;
-  border: 1px solid #4d5824;
-  border-radius: 999px;
-  background: rgba(215, 247, 77, 0.14);
-  color: var(--acid);
-  font-size: 0.68rem;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-}
-
-.cockpit-tabs {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.45rem;
-  padding: 0.75rem 1.15rem 0;
-}
-
-.cockpit-tab {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.4rem;
-  min-height: 2.35rem;
-  padding: 0.35rem 0.5rem;
-  border: 1px solid #382e39;
-  border-radius: 3px;
-  background: #171319;
-  color: var(--muted);
-  font-size: 0.73rem;
-  font-weight: 800;
-  cursor: pointer;
-  transition: border-color 150ms ease-out, color 150ms ease-out, background-color 150ms ease-out;
-}
-
-.cockpit-tab:hover {
-  border-color: #6b596a;
+/* 4 Orbiting Product & Engineering Nodes */
+.nexus-node {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.78rem 0.85rem;
+  border: 1px solid rgba(246, 240, 232, 0.13);
+  border-radius: 6px;
+  background: rgba(24, 19, 27, 0.82);
+  backdrop-filter: blur(8px);
   color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  transform: translateZ(16px);
+  transition:
+    transform 200ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 200ms ease,
+    background-color 200ms ease,
+    box-shadow 200ms ease;
 }
 
-.cockpit-tab--active {
+.nexus-node:hover {
+  border-color: rgba(215, 247, 77, 0.55);
+  background: rgba(33, 27, 37, 0.92);
+  transform: translateZ(24px) translateY(-2px);
+}
+
+.nexus-node--active {
   border-color: var(--acid);
-  background: rgba(215, 247, 77, 0.13);
-  color: var(--acid);
+  background: linear-gradient(155deg, rgba(42, 39, 28, 0.92) 0%, rgba(23, 19, 26, 0.95) 100%);
+  box-shadow:
+    0 14px 30px rgba(0, 0, 0, 0.46),
+    0 0 18px rgba(215, 247, 77, 0.18);
+  transform: translateZ(32px) scale(1.015);
 }
 
-.cockpit-editor {
-  margin: 0.75rem 1.15rem;
-  border: 1px solid #352b36;
-  border-radius: 4px;
-  background: #110e13;
-  overflow: hidden;
-}
-
-.cockpit-editor-bar {
+.nexus-node-head {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 0.5rem;
-  padding: 0.45rem 0.75rem;
-  border-bottom: 1px solid #282029;
-  background: #19141b;
+  gap: 0.35rem;
+  width: 100%;
+  margin-bottom: 0.38rem;
 }
 
-.cockpit-file {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.38rem;
-  color: var(--muted);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 0.68rem;
-}
-
-.cockpit-lang-badge {
-  padding: 0.1rem 0.42rem;
-  border-radius: 2px;
-  background: #261f28;
+.nexus-node-code {
   color: var(--acid);
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   font-size: 0.6rem;
@@ -374,117 +528,235 @@
   letter-spacing: 0.08em;
 }
 
-.cockpit-headline {
-  padding: 0.55rem 0.75rem 0.25rem;
-  color: var(--text);
-  font-size: 0.78rem;
-  font-weight: 700;
-}
-
-.cockpit-code {
-  margin: 0;
-  padding: 0.45rem 0.75rem 0.7rem;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: clamp(0.66rem, 0.92vw, 0.74rem);
-  line-height: 1.52;
-  white-space: pre-wrap;
-  word-break: break-word;
-}
-
-.cockpit-code-line {
-  display: grid;
-  grid-template-columns: 1.45rem minmax(0, 1fr);
-  gap: 0.45rem;
-  padding: 0.08rem 0.3rem;
+.nexus-node-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.1rem 0.38rem;
   border-radius: 2px;
-  color: #cfc5cf;
-}
-
-.cockpit-code-line--accent {
-  background: rgba(215, 247, 77, 0.1);
-  color: var(--acid);
-}
-
-.cockpit-line-num {
-  color: #6b5d69;
-  user-select: none;
-}
-
-.cockpit-footer {
-  padding: 0 1.15rem 1rem;
-}
-
-.cockpit-nodes {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.48rem;
-  margin-bottom: 0.75rem;
-}
-
-.cockpit-node {
-  padding: 0.45rem 0.6rem;
-  border: 1px solid #352b36;
-  border-radius: 3px;
-  background: #19141b;
-}
-
-.cockpit-node-label {
-  display: block;
+  background: rgba(246, 240, 232, 0.07);
   color: var(--muted);
-  font-size: 0.62rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+  font-size: 0.58rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 
-.cockpit-node-val {
-  display: block;
-  margin-top: 0.1rem;
-  color: var(--text);
-  font-size: 0.76rem;
-  font-weight: 800;
+.nexus-node--active .nexus-node-badge {
+  background: rgba(215, 247, 77, 0.18);
+  color: var(--acid);
 }
 
-.cockpit-status-row {
+.nexus-node-title {
+  display: block;
+  margin-bottom: 0.42rem;
+  color: var(--text);
+  font-size: 0.88rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.nexus-node-metric-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.42rem;
+  width: 100%;
+  padding-top: 0.38rem;
+  border-top: 1px solid rgba(246, 240, 232, 0.08);
+}
+
+.nexus-node-metric {
+  color: var(--acid);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.72rem;
+  font-weight: 900;
+}
+
+.nexus-node-metric-label {
+  color: var(--muted);
+  font-size: 0.65rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Bottom Glass Telemetry & Architecture Inspector */
+.nexus-inspector {
+  position: relative;
+  z-index: 2;
+  padding: 0.95rem 1.05rem;
+  border: 1px solid rgba(215, 247, 77, 0.32);
+  border-radius: 6px;
+  background: rgba(15, 12, 17, 0.88);
+  backdrop-filter: blur(10px);
+  transform: translateZ(22px);
+}
+
+.nexus-inspector-top {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 0.5rem;
-  padding-top: 0.65rem;
-  border-top: 1px solid #322833;
+  gap: 0.6rem;
+  margin-bottom: 0.45rem;
 }
 
-.cockpit-live-indicator {
-  display: inline-flex;
+.nexus-inspector-title-group {
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 0.38rem;
-  color: var(--muted);
-  font-size: 0.73rem;
-  font-weight: 700;
+  gap: 0.55rem;
 }
 
-.cockpit-project-link {
+.nexus-inspector-pill {
   display: inline-flex;
   align-items: center;
-  gap: 0.38rem;
-  padding: 0.26rem 0.62rem;
-  border: 1px solid var(--acid);
+  gap: 0.32rem;
+  padding: 0.16rem 0.48rem;
   border-radius: 2px;
-  background: rgba(215, 247, 77, 0.14);
-  color: var(--acid);
-  font-size: 0.72rem;
+  background: var(--acid);
+  color: var(--ink);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.6rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+}
+
+.nexus-inspector-heading {
+  color: var(--text);
+  font-size: 0.98rem;
   font-weight: 800;
 }
 
-.cockpit-project-link:hover {
+.nexus-launch-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.32rem;
+  padding: 0.28rem 0.62rem;
+  border: 1px solid var(--acid);
+  border-radius: 3px;
+  background: rgba(215, 247, 77, 0.14);
+  color: var(--acid);
+  font-size: 0.7rem;
+  font-weight: 800;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.nexus-launch-btn:hover {
   background: var(--acid);
   color: var(--ink);
 }
 
-@media (max-width: 560px) {
-  .cockpit-tabs,
-  .cockpit-nodes {
+.nexus-inspector-desc {
+  margin-bottom: 0.7rem;
+  color: var(--muted);
+  font-size: 0.8rem;
+  line-height: 1.46;
+}
+
+.nexus-pipeline {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.45rem;
+  margin-bottom: 0.7rem;
+}
+
+.nexus-pipe-step {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.38rem;
+  padding: 0.38rem 0.55rem;
+  border: 1px solid rgba(246, 240, 232, 0.11);
+  border-radius: 4px;
+  background: #18131b;
+}
+
+.nexus-pipe-num {
+  color: var(--acid);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.64rem;
+  font-weight: 900;
+}
+
+.nexus-pipe-text {
+  color: var(--text);
+  font-size: 0.7rem;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nexus-pipe-bolt {
+  margin-left: auto;
+  color: var(--acid);
+  flex-shrink: 0;
+}
+
+.nexus-stack-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.45rem;
+  padding-top: 0.55rem;
+  border-top: 1px solid rgba(246, 240, 232, 0.08);
+}
+
+.nexus-stack-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 700;
+}
+
+.nexus-stack-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.nexus-stack-chip {
+  padding: 0.14rem 0.46rem;
+  border: 1px solid rgba(215, 247, 77, 0.3);
+  border-radius: 2px;
+  background: rgba(215, 247, 77, 0.08);
+  color: var(--acid);
+  font-size: 0.66rem;
+  font-weight: 800;
+}
+
+@media (max-width: 640px) {
+  .nexus-constellation {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: auto;
+  }
+
+  .nexus-core {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    margin-bottom: 0.25rem;
+  }
+
+  .nexus-node--tl,
+  .nexus-node--tr,
+  .nexus-node--bl,
+  .nexus-node--br {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
+  .nexus-pipeline {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 440px) {
+  .nexus-constellation {
     grid-template-columns: minmax(0, 1fr);
   }
 }
