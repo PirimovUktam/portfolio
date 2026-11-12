@@ -1,7 +1,6 @@
-import { ArrowDown, ArrowDownRight, ArrowUpRight, LocateFixed, Terminal } from "lucide-react";
+import { ArrowDown, ArrowDownRight, ArrowUpRight, Terminal } from "lucide-react";
 import { portfolio, type Locale } from "@/data/portfolio";
-import { DepthScene } from "@/components/depth-scene";
-import { ResponsiveImage } from "@/components/responsive-image";
+import { HeroCockpit } from "@/components/hero-cockpit";
 import { TypewriterRole } from "@/components/typewriter-role";
 import { Reveal } from "@/components/reveal";
 
@@ -83,27 +82,9 @@ export function Hero({ locale }: { locale: Locale }) {
         </div>
 
         <figure className="hero-figure">
-          <DepthScene>
-            <div className="scene-art">
-              <ResponsiveImage
-                className="hero-image"
-                fetchPriority="high"
-                fill
-                image={hero.art}
-                loading="eager"
-                locale={locale}
-                sizes="(max-width: 760px) 90vw, (max-width: 1440px) 45vw, 40rem"
-              />
-            </div>
-            <div className="scene-rule" aria-hidden="true" />
-            <div className="scene-origin" aria-hidden="true">
-              <LocateFixed size={18} />
-            </div>
-          </DepthScene>
-          <figcaption className="hero-caption eyebrow">
-            <span>{hero.plate}</span>
-            <span>{hero.index[locale]}</span>
-          </figcaption>
+          <Reveal delay={0.14}>
+            <HeroCockpit locale={locale} />
+          </Reveal>
         </figure>
       </div>
       <div className="hero-foot eyebrow">
