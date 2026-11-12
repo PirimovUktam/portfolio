@@ -547,7 +547,7 @@ export const projects: Project[] = [
       },
     ],
     technologies: ["React", "TypeScript", "Flutter", "Supabase", "PostgreSQL", "Gemini"],
-    liveUrl: "https://bilimyol-smart-edu.vercel.app",
+    liveUrl: "https://bilimyol.uz",
     githubUrl: "https://github.com/PirimovUktam/bilimyol-smart-edu",
     featured: true,
     cover: {

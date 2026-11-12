@@ -629,6 +629,43 @@
   font-weight: 800;
 }
 
+.nexus-inspector-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.nexus-live-badge-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.38rem;
+  padding: 0.28rem 0.65rem;
+  border: 1px solid #10b981;
+  border-radius: 3px;
+  background: rgba(16, 185, 129, 0.16);
+  color: #34d399;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  transition: background-color 150ms ease, color 150ms ease, box-shadow 150ms ease;
+}
+
+.nexus-live-badge-btn:hover {
+  background: #10b981;
+  color: #141116;
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.55);
+}
+
+.nexus-live-pulse-dot {
+  width: 0.42rem;
+  height: 0.42rem;
+  border-radius: 50%;
+  background: #34d399;
+  box-shadow: 0 0 8px #34d399;
+}
+
 .nexus-launch-btn {
   display: inline-flex;
   align-items: center;

@@ -36,6 +36,7 @@ type EcosystemNode = {
   summary: { en: string; uz: string };
   slug?: string;
   certificateUrl?: string;
+  liveUrl?: string;
 };
 
 const NODES: EcosystemNode[] = [
@@ -54,6 +55,7 @@ const NODES: EcosystemNode[] = [
       uz: "O'quvchi bilimidagi bo'shliqlarni aniqlab, Yölçi AI orqali xatolarni qadam-baqadam tushuntiruvchi platforma.",
     },
     slug: "bilimyol-smart-edu",
+    liveUrl: "https://bilimyol.uz",
   },
   {
     id: "lexhub",
@@ -309,24 +311,44 @@ export function HeroCockpit({ locale }: { locale: Locale }) {
                 <h3 className="nexus-inspector-heading">{active.title}</h3>
               </div>
 
-              {active.slug && (
-                <Link className="nexus-launch-btn" href={projectPath(locale, active.slug)}>
-                  <span>{locale === "uz" ? "Arxitekturani ko'rish" : "Inspect Case Study"}</span>
-                  <ArrowUpRight aria-hidden="true" size={14} />
-                </Link>
-              )}
+              <div className="nexus-inspector-actions">
+                {active.liveUrl && (
+                  <a
+                    className="nexus-live-badge-btn"
+                    href={active.liveUrl}
+                    rel="noreferrer"
+                    target="_blank"
+                    title={
+                      locale === "uz"
+                        ? "Rasmiy saytni ochish: " + active.liveUrl
+                        : "Open official site: " + active.liveUrl
+                    }
+                  >
+                    <span className="nexus-live-pulse-dot" aria-hidden="true" />
+                    <span>{active.liveUrl.replace("https://", "")}</span>
+                    <ArrowUpRight aria-hidden="true" size={13} />
+                  </a>
+                )}
 
-              {active.certificateUrl && (
-                <a
-                  className="nexus-launch-btn"
-                  href={active.certificateUrl}
-                  rel="noreferrer"
-                  target="_blank"
-                >
-                  <span>{locale === "uz" ? "Sertifikat (PDF)" : "Certificate (PDF)"}</span>
-                  <ArrowUpRight aria-hidden="true" size={14} />
-                </a>
-              )}
+                {active.slug && (
+                  <Link className="nexus-launch-btn" href={projectPath(locale, active.slug)}>
+                    <span>{locale === "uz" ? "Arxitektura" : "Case Study"}</span>
+                    <ArrowUpRight aria-hidden="true" size={14} />
+                  </Link>
+                )}
+
+                {active.certificateUrl && (
+                  <a
+                    className="nexus-launch-btn"
+                    href={active.certificateUrl}
+                    rel="noreferrer"
+                    target="_blank"
+                  >
+                    <span>{locale === "uz" ? "Sertifikat (PDF)" : "Certificate (PDF)"}</span>
+                    <ArrowUpRight aria-hidden="true" size={14} />
+                  </a>
+                )}
+              </div>
             </div>
 
             <p className="nexus-inspector-desc">{active.summary[locale]}</p>
